@@ -10,9 +10,9 @@ const DashBoardLayout = ({ children }) => {
         </div>
         <div className="col-span-9 mt-4">
           <div className="flex flex-col">
-            
+
             <Header />
-        
+
             <div className="min-h-[80vh] w-full rounded-lg shadow-md mt-8">{children}</div>
           </div>
         </div>

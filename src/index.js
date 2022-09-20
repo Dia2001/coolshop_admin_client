@@ -3,12 +3,14 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import React from "react";
-
+import { ApplicationContext } from "./Providers/ApplicationContext"
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <App />
+    <ApplicationContext>
+      <App />
+    </ApplicationContext>
   </React.StrictMode>
 );
 

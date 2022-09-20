@@ -1,8 +1,8 @@
 import React from 'react'
 
-const DefaultLayout = ({children}) => {
+const DefaultLayout = ({ children }) => {
   return (
-    <div>{ children }</div>
+    <div>{children}</div>
   )
 }
 

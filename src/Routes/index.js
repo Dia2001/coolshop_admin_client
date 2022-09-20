@@ -1,4 +1,5 @@
 import DashBoardLayout from "../layouts/DashBoardLayout";
+import config from "../config"
 
 import Request from "../pages/Request";
 import DashBoard from "../pages/DashBoard";
@@ -10,15 +11,17 @@ import Employees from "../pages/Employees";
 import Customers from "../pages/Customers";
 import Login from "../pages/Login";
 
-export const publicRouter=[
-    {path:'/',component:DashBoard,layout:DashBoardLayout},
-    {path:'/requests',component:Request,layout:DashBoardLayout},
-    {path:'/notifitions',component:Notifition,layout:DashBoardLayout},
-    {path:'/categories',component:Category,layout:DashBoardLayout},
-    {path:'/orders',component:Orders,layout:DashBoardLayout},
-    {path:'/products',component:Products,layout:DashBoardLayout},
-    {path:'/employees',component:Employees,layout:DashBoardLayout},
-    {path:'/customers',component:Customers,layout:DashBoardLayout},
-    {path:'/login',component:Login,layout:null},
-    
+export const publicRouter = [
+  { path: config.routes.login, component: Login, layout: null },
+]
+
+export const privateRouter = [
+  { path: config.routes.home, component: DashBoard, layout: DashBoardLayout },
+  { path: config.routes.request, component: Request, layout: DashBoardLayout },
+  { path: config.routes.notifition, component: Notifition, layout: DashBoardLayout },
+  { path: config.routes.categories, component: Category, layout: DashBoardLayout },
+  { path: config.routes.orders, component: Orders, layout: DashBoardLayout },
+  { path: config.routes.products, component: Products, layout: DashBoardLayout },
+  { path: config.routes.employees, component: Employees, layout: DashBoardLayout },
+  { path: config.routes.customers, component: Customers, layout: DashBoardLayout },
 ]
