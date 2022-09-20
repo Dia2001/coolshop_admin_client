@@ -3,6 +3,7 @@
 @tailwind utilities;
 *{
   font-family: lora;
+  color: #2C3333;
 }
 
 @layer base{
