@@ -14,7 +14,7 @@ function App() {
   const fetchApiGetInfoUserLogin = async () => {
 
     // Neu khong co user trong context thi call api
-    if (!userLogin) {
+    if (token !== '' && !userLogin) {
       const result = await AuthService.getProfile()
 
       // Neu token hop le thi luu thong tin user vao context nguoc lai thi xoa token 

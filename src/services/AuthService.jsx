@@ -5,7 +5,7 @@ const token = localStorage.getItem('token')
 
 const headers = {
   'Content-Type': 'application/json',
-  'authorization': token || ''
+  'Authorization': `Bearer ${token || ''}`
 }
 
 /**
@@ -51,11 +51,14 @@ async function login({ username, password }) {
 * Call api get thong tin user da dang nhap dua vao token 
 * return Object gom status (trang thai call) data (du lieu nhan duoc)
 */
-async function getProfile() {
+async function getProfile(tokenParam) {
   try {
-    const response = await fetch(`${BASE_API}/users`, {
+    const response = await fetch(`${BASE_API}/profile`, {
       method: 'GET',
-      headers,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${tokenParam || token || ''}`
+      }
     })
 
     const result = await response.json()
