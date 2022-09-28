@@ -1,5 +1,5 @@
 import React, { Fragment, useContext, useEffect } from "react";
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Outlet, Route, Routes } from "react-router-dom";
 
 import { AppContext } from "./Providers/ApplicationContext";
 import { publicRouter, privateRouter } from "./Routes";
@@ -56,7 +56,7 @@ function App() {
             />
           );
         })}
-        {token !== '' ? // Neu da dang nhap thi cho phep truy cap cac route private
+        {token === '' ? // Neu da dang nhap thi cho phep truy cap cac route private
           <>
             {privateRouter.map((route, index) => {
               const Page = route.component;
@@ -66,17 +66,47 @@ function App() {
               } else if (route.layout === null) {
                 Layout = Fragment;
               }
-              return (
-                <Route
-                  key={index}
-                  path={route.path}
-                  element={
-                    <Layout>
-                      <Page />
-                    </Layout>
-                  }
-                />
-              )
+              if (route.childrens) {
+                if (route.component) {
+                  route.childrens.push(route)
+                }
+                return (
+                  <Route
+                    key={index}
+                    path={route.path}
+                    element={
+                      <Layout>
+                        <Outlet />
+                      </Layout>
+                    }>
+                    {route.childrens.map((routeChild, indexChild) => {
+                      let PageChild = routeChild.component
+                      return (
+                        <Route
+                          key={`${indexChild}child`}
+                          path={routeChild.path}
+                          element={
+                            <PageChild />
+                          }
+                        />
+                      )
+                    })
+                    }
+                  </Route>
+                )
+              } else {
+                return (
+                  <Route
+                    key={index}
+                    path={route.path}
+                    element={
+                      <Layout>
+                        <Page />
+                      </Layout>
+                    }
+                  />
+                )
+              }
             })}
           </>
           : // Nguoc lai chi cho phep route public
