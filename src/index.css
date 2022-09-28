@@ -1,8 +1,12 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-*{
+
+* {
   font-family: lora;
+}
+
+body {
   color: #2C3333;
 }
 

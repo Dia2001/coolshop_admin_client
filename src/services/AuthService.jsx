@@ -1,12 +1,5 @@
-const BASE_API = process.env.REACT_APP_BASE_API
-
-// Lay token tu localStorage va ding kem vao headers neu co
-const token = localStorage.getItem('token')
-
-const headers = {
-  'Content-Type': 'application/json',
-  'authorization': token || ''
-}
+import config from '../config'
+import { getToken, getHeaders } from '../utils'
 
 /**
 * Call api login 
@@ -15,9 +8,9 @@ const headers = {
 */
 async function login({ username, password }) {
   try {
-    const response = await fetch(`${BASE_API}/login`, {
+    const response = await fetch(`${config.BASE_API}/login`, {
       method: 'POST',
-      headers,
+      headers: getHeaders(),
       body: JSON.stringify({
         username: username,
         password: password
@@ -51,11 +44,14 @@ async function login({ username, password }) {
 * Call api get thong tin user da dang nhap dua vao token 
 * return Object gom status (trang thai call) data (du lieu nhan duoc)
 */
-async function getProfile() {
+async function getProfile(tokenParam) {
   try {
-    const response = await fetch(`${BASE_API}/users`, {
+    const response = await fetch(`${config.BASE_API}/profile`, {
       method: 'GET',
-      headers,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${tokenParam || getToken() || ''}`
+      }
     })
 
     const result = await response.json()

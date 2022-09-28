@@ -30,8 +30,8 @@ const Login = () => {
   const onSubmit = (data) => {//for test data when submit
 
     // Lay thong tin user dang dang nhap bang token
-    const fetchApiGetInfoUserLogin = async (callback) => {
-      const result = await AuthService.getProfile()
+    const fetchApiGetInfoUserLogin = async (token, callback) => {
+      const result = await AuthService.getProfile(token)
 
       // Neu lay duoc thong tin user thi luu vao AppContext
       // Nguoc lai xoa token
@@ -53,7 +53,7 @@ const Login = () => {
         localStorage.setItem('token', result.data)
         setToken(result.data)
 
-        await fetchApiGetInfoUserLogin((boolean) => {
+        await fetchApiGetInfoUserLogin(result.data, (boolean) => {
           // Neu lay duoc thong tin user tu token
           if (boolean) {
             navigate(config.routes.home)
@@ -97,7 +97,7 @@ const Login = () => {
             <h6 className="font-semibold">Mật khẩu</h6>
             <div className="">
               {/* validate by register */}
-              <input name="password" {...register('password', { required: true, minLength: 6 })}
+              <input name="password" {...register('password', { required: true, minLength: 4 })}
                 className="rounded-full w-[90%]  shadow-md py-2 pr-12 pl-4"
                 type={type}
                 placeholder="Nhập mật khẩu ..."
