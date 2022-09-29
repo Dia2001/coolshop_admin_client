@@ -29,7 +29,7 @@ const NavBar = ({ toggleNavBar }) => {
     <div className='rounded-md p-3 items-center relative shadow-sm bg-white h-[100vh] flex flex-col justify-between'>
       <button
         onClick={handleToggleNavBar}
-        className="rounded-full text-2xl absolute -right-4 top-4 bg-white shadow-md hover:opacity-70 border-2 w-8 h-8 flex items-center justify-center">
+        className="rounded-full text-2xl absolute -right-4 top-4 bg-white shadow-lg hover:opacity-70 w-8 h-8 flex items-center justify-center">
         {isShowNavBar ?
           <>
             <MdKeyboardArrowLeft className='-mr-5' />

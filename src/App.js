@@ -56,7 +56,7 @@ function App() {
             />
           );
         })}
-        {token === '' ? // Neu da dang nhap thi cho phep truy cap cac route private
+        {token !== '' ? // Neu da dang nhap thi cho phep truy cap cac route private
           <>
             {privateRouter.map((route, index) => {
               const Page = route.component;

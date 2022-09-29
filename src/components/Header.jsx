@@ -1,7 +1,8 @@
 import React, { useContext, useState } from "react";
 import { MdSearch, MdOutlineSettings, MdDashboard, MdKeyboardArrowUp, MdKeyboardArrowDown } from "react-icons/md"
 import { AppContext } from "../Providers/ApplicationContext";
-const Header = () => {
+
+const Header = ({ isShowMenu, toggleMenu }) => {
   const { userLogin } = useContext(AppContext);
   const [isShowHintAccount, setIsShowHintAccount] = useState()
 
@@ -43,6 +44,7 @@ const Header = () => {
               </button>
               <button
                 className="rounded-full w-full mt-2 shadow-gray-300 shadow-md border min-w-[50px] hover:opacity-70 h-6 px-2">
+                Cài đặt
               </button>
             </div>
           </>
@@ -50,7 +52,7 @@ const Header = () => {
           <MdKeyboardArrowDown />
         }
 
-        <button className="text-3xl ml-5 hover:opacity-70">
+        <button onClick={() => toggleMenu(!isShowMenu)} className="text-3xl ml-5 hover:opacity-70">
           <MdOutlineSettings />
         </button>
       </div>
@@ -59,4 +61,4 @@ const Header = () => {
   );
 };
 
-export default Header;
+export default Header

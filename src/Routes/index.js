@@ -14,10 +14,10 @@ import Login from "../pages/Login";
 
 export const publicRouter = [
   { path: config.routes.login, component: Login, layout: null },
-  { path: config.routes.home, component: DashBoard, layout: DashBoardLayout },
 ]
 
 export const privateRouter = [
+  { path: config.routes.home, component: DashBoard, layout: DashBoardLayout },
   {
     path: config.routes.request, component: Request, layout: DashBoardLayout
   },
