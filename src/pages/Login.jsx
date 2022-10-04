@@ -38,7 +38,6 @@ const Login = () => {
       if (result.success) {
         setUserLogin(result.data)
       } else {
-        localStorage.removeItem('token')
         setToken('')
       }
       callback(result.success)

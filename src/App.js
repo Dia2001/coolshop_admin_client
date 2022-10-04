@@ -21,7 +21,6 @@ function App() {
       if (result.success) {
         setUserLogin(result.data)
       } else {
-        localStorage.removeItem('token')
         setToken('')
       }
     }
