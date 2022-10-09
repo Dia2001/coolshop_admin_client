@@ -45,11 +45,17 @@ const headerProductDefaults = [
     key: 'colors',
     value: 'Màu',
     visible: true,
-    scale: 10
+    scale: 20
   },
   {
     key: 'sizes',
     value: 'Sizes',
+    visible: true,
+    scale: 20
+  },
+  {
+    key: 'totalQuantity',
+    value: 'Số lượng',
     visible: true,
     scale: 10
   },
@@ -77,6 +83,7 @@ const config = {
     orders: '/orders',
     products: '/products',
     createProduct: '/products/create',
+    editProduct: '/products/edit',
     employees: '/employees',
     customers: '/customers',
   },

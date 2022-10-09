@@ -75,7 +75,13 @@ function App() {
                     path={route.path}
                     element={
                       <Layout>
-                        <Outlet />
+                        {route.context ?
+                          <route.context>
+                            <Outlet />
+                          </route.context>
+                          :
+                          <Outlet />
+                        }
                       </Layout>
                     }>
                     {route.childrens.map((routeChild, indexChild) => {
