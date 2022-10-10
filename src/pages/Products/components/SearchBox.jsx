@@ -5,7 +5,7 @@ function SearchBox() {
   return (
     <div className="flex justify-between items-center">
       <div className='flex items-center'>
-        <h5 className='mr-5'>Products</h5>
+        <h5 className='mr-5'>Sản phẩm</h5>
         <Link className='rounded-full px-2 h-6 bg-ActiveColor hover:opacity-70' to={config.routes.createProduct} >
           Tạo mới</Link>
         <button

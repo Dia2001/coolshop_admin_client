@@ -1,15 +1,16 @@
-import { useContext, useEffect, useRef, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import ProductService from '../../services/ProductService'
 import config from '../../config'
 import { Link, useNavigate } from 'react-router-dom'
 import { ProductContext } from '../../Providers/ProductContext'
 import Modals from '../../components/Modals'
+import { TextBox, ComboBox, TextArea, ImageDrag, CheckList } from '../../components/Inputs'
 
 function CreateProduct() {
 
   const { brands, categories, sizes, colors } = useContext(ProductContext)
   const navigate = useNavigate()
-  const fileImage = useRef()
+  const [image, setImage] = useState()
   const [name, setName] = useState('')
   const [price, setPrice] = useState(1000)
   const [description, setDescription] = useState('')
@@ -35,7 +36,7 @@ function CreateProduct() {
       }
     }
 
-    const result = await ProductService.create(fileImage.current.files[0], product)
+    const result = await ProductService.create(image, product)
 
     if (result.success) {
       navigate(`${config.routes.editProduct}?productId=${result.data.data}`)
@@ -45,53 +46,14 @@ function CreateProduct() {
     }
   }
 
-  const handleCheckCategory = (categoryId) => {
-    if (categoryIds.includes(categoryId)) {
-      setCategoryIds(prev => prev.reduce((curr, item) => {
-        if (item !== categoryId) {
-          curr.push(item)
-        }
-        return curr
-      }, []))
-    } else {
-      setCategoryIds(prev => [...prev, categoryId])
-    }
-  }
-
-  const handleCheckColor = (colorId) => {
-    if (colorIds.includes(colorId)) {
-      setColorIds(prev => prev.reduce((curr, item) => {
-        if (item !== colorId) {
-          curr.push(item)
-        }
-        return curr
-      }, []))
-    } else {
-      setColorIds(prev => [...prev, colorId])
-    }
-  }
-
-  const handleCheckSize = (sizeId) => {
-    if (sizeIds.includes(sizeId)) {
-      setSizeIds(prev => prev.reduce((curr, item) => {
-        if (item !== sizeId) {
-          curr.push(item)
-        }
-        return curr
-      }, []))
-    } else {
-      setSizeIds(prev => [...prev, sizeId])
-    }
-  }
-
   useEffect(() => {
     document.title = "Tạo mới sản phẩm"
   })
 
   return (
-    <div className="p-2">
-      <div className="flex items-center mb-2">
-        <Link className='mr-1 text-xl'>Products</Link>
+    <div className="p-4">
+      <div className="flex items-center">
+        <Link className='mr-1 text-xl' to={config.routes.products}>Sản phẩm</Link>
         <h6 className='font-bold'>
           &gt; Tạo mới
         </h6>
@@ -99,130 +61,33 @@ function CreateProduct() {
       <div className="w-full flex flex-wrap">
 
         <div className="w-[48%] min-w-[300px] mr-[2%]">
+          <TextBox title="Tên" value={name} placeholder="Tên sản phẩm" onChange={setName} />
 
-          <div className="flex item-center justify-start my-5">
-            <p className="mr-5 w-[25%]">Tên</p>
-            <div className=" w-80 ">
-              <input
-                className="w-full border-gray-600 border-2 rounded-lg px-2"
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-              />
-            </div>
-          </div>
+          <TextBox title="Giá" value={price} onChange={setPrice} />
 
-          <div className="flex item-center justify-start my-5">
-            <p className="mr-5 w-[25%]">Giá</p>
-            <div className=" w-80 ">
-              <input
-                className="w-full border-gray-600 border-2 rounded-lg px-2"
-                type="number" min={1000} max={100000000}
-                value={price}
-                onChange={(e) => setPrice(e.target.value)}
-              />
-            </div>
-          </div>
+          <TextBox title="Slug" value={slug} placeholder='Để trống sẽ được tạo ra tự động'
+            onChange={setSlug} />
 
-          <div className="flex item-center justify-start my-5">
-            <p className="mr-5 w-[25%]">Slug</p>
-            <div className=" w-80 ">
-              <input
-                placeholder='Để trống sẽ được tạo ra tự động'
-                className="w-full border-gray-600 border-2 rounded-lg px-2"
-                type="text"
-                value={slug}
-                onChange={(e) => setSlug(e.target.value)}
-              />
-            </div>
-          </div>
-          <div className="flex item-center justify-start my-5">
-            <p className="mr-5 w-[25%]">Hãng</p>
-            <select
-              className=" w-80 border-gray-600 border-2 rounded-lg px-2"
-              onChange={(e) => {
-                setBrandId(e.target.value)
-              }}
-              value={brandId}>
-              <option value=""></option>
-              {brands.map((brand, index) => {
-                return <option key={index} value={brand.brandId}>{brand.name}</option>
-              })}
-            </select>
-          </div>
+          <ComboBox title="Hãng" options={brands} value={brandId} onChange={setBrandId}
+            keyValueOption="brandId" keyTitleOption="name" />
 
-          <div className="flex item-center justify-start my-5">
-            <p className="mr-5 w-[25%]">Mô tả</p>
-            <div className=" w-80 ">
-              <textarea
-                className="w-full border-gray-600 border-2 rounded-lg px-2"
-                type="text"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-              >{description}</textarea>
-            </div>
-          </div>
+          <TextArea title="Mô tả" value={description} onChange={setDescription} />
 
-          <div className="flex item-center justify-start my-5">
-            <p className="mr-5 w-[25%]">Hình ảnh</p>
-            <div className=" w-80 ">
-              <input type="file" ref={fileImage}
-              />
-            </div>
-          </div>
+          <ImageDrag title="Hình ảnh" file={image} setFile={setImage} />
+
         </div>
         <div className="w-[48%]">
 
-          <div className="flex item-center mt-5">
-            <p className="mr-5 w-14">Danh muc</p>
-            <div className="max-h-52 overflow-y-auto w-96 flex flex-wrap">
-              {categories.map((category, index) => {
-                return (
-                  <div className="flex h-6 mr-5" key={index}>
-                    <input onChange={() => handleCheckCategory(category.categoryId)}
-                      checked={categoryIds.includes(category.categoryId)}
-                      type="checkbox"
-                    />
-                    <p className='ml-2'>{category.name}</p>
-                  </div>)
-              })}
-            </div>
-          </div>
+          <CheckList title="Danh mục" values={categoryIds} setValues={setCategoryIds}
+            options={categories} keyValueOption="categoryId" keyTitleOption="name" isWrap={true} />
 
           <div className="flex flex-wrap">
 
-            <div className="flex item-center justify-between my-5">
-              <p className="mr-5 w-14">Màu sắc</p>
-              <div className="max-h-52 overflow-y-auto w-40 ">
-                {colors.map((color, index) => {
-                  return (
-                    <div className="flex" key={index}>
-                      <input
-                        type="checkbox"
-                        onChange={() => handleCheckColor(color.colorId)}
-                        checked={colorIds.includes(color.colorId)}
-                      />
-                      <p className='ml-2'>{color.name}</p>
-                    </div>)
-                })}
-              </div>
-            </div>
-            <div className="flex item-center justify-between my-5">
-              <p className="mr-5 w-14">Size</p>
-              <div className="max-h-52 overflow-y-auto w-40 ">
-                {sizes.map((size, index) => {
-                  return (
-                    <div className="flex" key={index}>
-                      <input
-                        type="checkbox"
-                        onChange={() => handleCheckSize(size.sizeId)}
-                        checked={sizeIds.includes(size.sizeId)}
-                      />
-                      <p className='ml-2'>{size.name}</p>
-                    </div>)
-                })}
-              </div>
-            </div>
+            <CheckList title="Sizes" values={sizeIds} setValues={setSizeIds}
+              options={sizes} keyValueOption="sizeId" keyTitleOption="name" />
+
+            <CheckList title="Màu sắc" values={colorIds} setValues={setColorIds}
+              options={colors} keyValueOption="colorId" keyTitleOption="name" />
 
           </div>
         </div>

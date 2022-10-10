@@ -6,6 +6,8 @@ import ProductService from '../../services/ProductService'
 import { ProductContext } from '../../Providers/ProductContext'
 import Paginate from '../../components/Paginate'
 
+const pageSize = 10
+
 function Products() {
   const headersTable = config.headerProductDefaults.filter((item) => item.visible)
   const { brands, categories, colors, sizes } = useContext(ProductContext)
@@ -14,19 +16,30 @@ function Products() {
   const [listChecked, setListChecked] = useState([])
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPage, setTotalPage] = useState(1)
+  const [totalRecord, setTotalRecord] = useState(0)
 
   useEffect(() => {
     document.title = "Sản phẩm"
     fetchApiGetAllProduct()
   }, [])
 
-  const fetchApiGetAllProduct = async () => {
-    const result = await ProductService.getFilter({})
-    console.log(result)
+  const fetchApiGetAllProduct = async (page) => {
+    const result = await ProductService.getFilter({
+      pageSize: pageSize,
+      pageNumber: page || currentPage,
+    })
     if (result.success) {
       setProducts(result.data.products)
+      setTotalPage(result.data.totalPage)
+      setCurrentPage(result.data.currentPage)
+      setTotalRecord(result.data.totalRecord)
     }
   }
+
+  const handlePaging = async (page) => {
+    fetchApiGetAllProduct(page)
+  }
+
   const handleCheckAll = () => {
     if (listChecked.length === products.length) {
       setListChecked([])
@@ -63,9 +76,9 @@ function Products() {
       colors,
     }} >
 
-      <div className="p-1 justify-between items-center">
+      <div className="p-2 justify-between items-center">
         <SearchBox />
-        <table className="w-full border-blue-50">
+        <table className="w-full border">
           <thead className="table-header-group">
             <tr className="bg-blue-200">
               {headersTable.map((item, index) => {
@@ -170,7 +183,7 @@ function Products() {
             })}
           </tbody>
         </table>
-        <Paginate />
+        <Paginate totalPage={totalPage} currentPage={currentPage} callback={handlePaging} />
       </div >
     </ProductContext.Provider>
   )

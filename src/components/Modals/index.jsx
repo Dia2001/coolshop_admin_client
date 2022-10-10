@@ -6,4 +6,9 @@ const Modals = {
   Alert
 }
 
+export {
+  Confirm,
+  Alert
+}
+
 export default Modals 
