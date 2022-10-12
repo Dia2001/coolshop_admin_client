@@ -11,7 +11,7 @@ const Header = ({ isShowMenu, toggleMenu }) => {
   }
 
   return (
-    <div className="flex h-12 w-full bg-white justify-between p-0 shadow-md rounded-lg pr-3">
+    <div className="sticky top-0 flex h-12 w-full bg-white justify-between p-0 shadow-md rounded-lg pr-3">
       <div className="flex items-center pl-2">
         <MdDashboard size={30} />
         <h5 className="my-0 px-2">Dashboard</h5>
@@ -28,7 +28,7 @@ const Header = ({ isShowMenu, toggleMenu }) => {
 
         <button onClick={handleHintAccount}
           className="rounded-full shadow-gray-300 shadow-md border min-w-[50px] hover:opacity-70 h-6 px-2">
-          {userLogin ? userLogin.userName : 'user name'}
+          {userLogin ? userLogin.username : 'user name'}
         </button>
 
         <img className="w-8 h-8 mx-2 rounded-full"

@@ -6,11 +6,13 @@ import { useNavigate } from 'react-router-dom'
 import iconcoolshop from "../assets/coolshopiconfake.png";
 import AuthService from "../services/AuthService"
 import { AppContext } from "../Providers/ApplicationContext"
+import Modals from '../components/Modals'
 import config from "../config";
 
 const Login = () => {
   const navigate = useNavigate()
   const { setToken, setUserLogin } = useContext(AppContext)
+  const [message, setMessage] = useState('')
   const [type, setType] = useState('password');
   const [isShow, setIsShow] = useState(false);
   const { register, handleSubmit, formState: { errors } } = useForm();
@@ -38,7 +40,6 @@ const Login = () => {
       if (result.success) {
         setUserLogin(result.data)
       } else {
-        localStorage.removeItem('token')
         setToken('')
       }
       callback(result.success)
@@ -59,6 +60,8 @@ const Login = () => {
             navigate(config.routes.home)
           }
         })
+      } else {
+        setMessage("Tên tài khoản hoặc mật khẩu không chính xác!")
       }
     }
 
@@ -90,8 +93,7 @@ const Login = () => {
               <input name="username" {...register('username', { required: true })}
                 className="rounded-full w-[90%]  shadow-md p-2"
                 placeholder="Nhập tài khoản ..."
-              />
-            </div>
+              /> </div>
           </div>
           <div className="account flex flex-col w-[90%] mx-auto mt-8 relative">
             <h6 className="font-semibold">Mật khẩu</h6>
@@ -132,6 +134,8 @@ const Login = () => {
           </div>
         </div>
       </form>
+
+      <Modals.Alert message={message} isOpen={message !== ''} handler={() => setMessage('')} />
     </div>
   );
 };

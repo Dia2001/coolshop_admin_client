@@ -21,7 +21,6 @@ function App() {
       if (result.success) {
         setUserLogin(result.data)
       } else {
-        localStorage.removeItem('token')
         setToken('')
       }
     }
@@ -76,7 +75,13 @@ function App() {
                     path={route.path}
                     element={
                       <Layout>
-                        <Outlet />
+                        {route.context ?
+                          <route.context>
+                            <Outlet />
+                          </route.context>
+                          :
+                          <Outlet />
+                        }
                       </Layout>
                     }>
                     {route.childrens.map((routeChild, indexChild) => {

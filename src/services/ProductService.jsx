@@ -1,5 +1,6 @@
 import config from '../config'
-import { getHeaders } from '../utils'
+import { getToken, getHeaders } from '../utils'
+import { convertObjectToFormData } from '../utils'
 
 /**
 * Call api getAll products
@@ -34,6 +35,42 @@ async function getAll() {
   }
 }
 
+async function getFilter({ ...filter }) {
+
+  let queryParams = '?'
+
+  for (let param in filter) {
+    queryParams += `${param}=${filter[param]}&`
+  }
+
+  try {
+    const response = await fetch(`${config.BASE_API}/products/filter${queryParams}`, {
+      method: 'GET',
+      headers: getHeaders()
+    })
+
+    const result = await response.json()
+
+    if (response.status === 200) {
+      return {
+        success: true,
+        data: result
+      }
+    } else {
+      return {
+        success: false,
+        data: result
+      }
+    }
+
+  } catch (e) {
+    console.log(e)
+    return {
+      success: false,
+      data: ''
+    }
+  }
+}
 async function getById(id) {
   try {
     const response = await fetch(`${config.BASE_API}/products/${id}`, {
@@ -64,12 +101,18 @@ async function getById(id) {
   }
 }
 
-async function create(product) {
+async function create(fileImage, product) {
+
+  const formData = convertObjectToFormData(product)
+  formData.append("file", fileImage)
+
   try {
     const response = await fetch(`${config.BASE_API}/products/`, {
       method: 'POST',
-      headers: getHeaders(),
-      body: JSON.stringify(product)
+      headers: {
+        'Authorization': `Bearer ${getToken() || ''}`
+      },
+      body: formData
     })
 
     const result = await response.json()
@@ -95,12 +138,21 @@ async function create(product) {
   }
 }
 
-async function updateById(id, product) {
+async function updateById(id, product, fileImage) {
+  console.log(product)
+  const formData = convertObjectToFormData(product)
+
+  console.log(formData)
+
+  formData.append("file", fileImage)
+
   try {
     const response = await fetch(`${config.BASE_API}/products/${id}`, {
       method: 'PUT',
-      headers: getHeaders(),
-      body: JSON.stringify(product)
+      headers: {
+        'Authorization': `Bearer ${getToken() || ''}`
+      },
+      body: formData
     })
 
     const result = await response.json()
@@ -158,6 +210,7 @@ async function deleteById(id) {
 
 const ProductService = {
   getAll,
+  getFilter,
   getById,
   create,
   updateById,
@@ -166,6 +219,7 @@ const ProductService = {
 
 export {
   getAll,
+  getFilter,
   getById,
   create,
   updateById,

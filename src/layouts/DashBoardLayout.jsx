@@ -9,7 +9,6 @@ const DashBoardLayout = ({ children }) => {
 
   const handleCallbackIsShowNavBar = (status) => {
     setIsShowNavBar(status)
-    console.log(status)
   }
 
   const handleToggleMenu = (status) => {
@@ -17,13 +16,13 @@ const DashBoardLayout = ({ children }) => {
   }
 
   return (
-    <div className="text-BlackCool bg-GradientO1 h-[100vh]">
+    <div className="text-BlackCool bg-GradientO1">
       <div className="flex relative">
-        <div className={`${isShowNavBar ? 'w-[200px]' : 'w-[64px]'} transition-all`}>
+        <div className={`${isShowNavBar ? 'w-[200px]' : 'w-[64px]'} h-[100vh] transition-all fixed`}>
           <NavBar toggleNavBar={handleCallbackIsShowNavBar} />
         </div>
-        <div className={`flex-1 col-span-10 mt-1 ml-5 mr-4`}>
-          <div className="flex flex-col">
+        <div className={`${isShowNavBar ? 'ml-[200px]' : 'ml-[64px]'} transition-all flex-1`}>
+          <div className="flex flex-col ml-5 mr-4">
 
             <Header toggleMenu={handleToggleMenu} isShowMenu={isShowMenuBar} />
 

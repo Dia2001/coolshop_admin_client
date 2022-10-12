@@ -8,9 +8,12 @@ import Category from "../pages/Category";
 import Orders from "../pages/Orders";
 import Products from "../pages/Products";
 import CreateProduct from "../pages/Products/CreateProduct"
+import EditProduct from "../pages/Products/EditProduct"
 import Employees from "../pages/Employees";
 import Customers from "../pages/Customers";
 import Login from "../pages/Login";
+
+import { ProductContextProvider } from "../Providers/ProductContext"
 
 export const publicRouter = [
   { path: config.routes.login, component: Login, layout: null },
@@ -25,8 +28,13 @@ export const privateRouter = [
   { path: config.routes.categories, component: Category, layout: DashBoardLayout },
   { path: config.routes.orders, component: Orders, layout: DashBoardLayout },
   {
-    path: config.routes.products, component: Products, layout: DashBoardLayout, childrens: [
-      { path: 'create', component: CreateProduct }
+    path: config.routes.products,
+    component: Products,
+    layout: DashBoardLayout,
+    context: ProductContextProvider,
+    childrens: [
+      { path: 'create', component: CreateProduct },
+      { path: 'edit', component: EditProduct }
     ]
   },
   { path: config.routes.employees, component: Employees, layout: DashBoardLayout },

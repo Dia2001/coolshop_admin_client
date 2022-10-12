@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import {
   MdDashboard, MdOutlineCategory, MdKeyboardArrowLeft,
   MdAddShoppingCart, MdOutlineLogout, MdKeyboardArrowRight,
@@ -13,10 +13,12 @@ import NavbarItem from './NavbarItem'
 import LineHr from './LineHr'
 import { useLocation } from 'react-router-dom'
 import config from '../config'
+import { AppContext } from '../Providers/ApplicationContext'
 
 const NavBar = ({ toggleNavBar }) => {
   const location = useLocation()
   const [isShowNavBar, setIsShowNavBar] = useState(true)
+  const { logout } = useContext(AppContext)
 
   const handleToggleNavBar = () => {
     if (typeof toggleNavBar === 'function') {
@@ -25,8 +27,12 @@ const NavBar = ({ toggleNavBar }) => {
     setIsShowNavBar(prev => !prev)
   }
 
+  const handleLogout = () => {
+    logout()
+  }
+
   return (
-    <div className='rounded-md p-3 items-center relative shadow-sm bg-white h-[100vh] flex flex-col justify-between'>
+    <div className='rounded-md p-3 items-center relative shadow-sm bg-white h-full flex flex-col justify-between'>
       <button
         onClick={handleToggleNavBar}
         className="rounded-full text-2xl absolute -right-4 top-4 bg-white shadow-lg hover:opacity-70 w-8 h-8 flex items-center justify-center">
@@ -101,7 +107,8 @@ const NavBar = ({ toggleNavBar }) => {
 
       </nav>
 
-      <button className={`my-2 overflow-hidden hover:opacity-70 rounded-full ${isShowNavBar ? 'justify-center' : 'justify-start pl-3'} bg-white h-10 w-full border flex items-center shadow-md`}>
+      <button className={`my-2 overflow-hidden hover:opacity-70 rounded-full ${isShowNavBar ? 'justify-center' : 'justify-start pl-3'} bg-white h-10 w-full border flex items-center shadow-md`}
+        onClick={handleLogout}>
         <div className={`mr-3 flex items-center text-2xl`}>
           <MdOutlineLogout className="-ml-1" />
         </div>
