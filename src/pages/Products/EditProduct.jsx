@@ -3,10 +3,11 @@ import { Link, useLocation, useNavigate } from 'react-router-dom'
 import ProductService from '../../services/ProductService'
 import { ProductContext } from '../../Providers/ProductContext'
 import { TextBox, ComboBox, TextArea, ImageDrag, CheckList } from '../../components/Inputs'
+import Modals from '../../components/Modals'
 import config from '../../config'
 
 function EditProduct() {
-  const { brands, categorys, sizes, colors } = useContext(ProductContext)
+  const { brands, categories, sizes, colors } = useContext(ProductContext)
   const location = useLocation()
   const query = new URLSearchParams(location.search)
   const [product, setProduct] = useState()
@@ -29,6 +30,21 @@ function EditProduct() {
     }
   }, [])
 
+  const handleUpdate = async () => {
+    const productUpdate = {
+      productId: productId,
+      name: name,
+      price: price,
+      description: description,
+      slug: slug,
+      brandId: brandId,
+    }
+
+    const result = await ProductService.updateById(productId, productUpdate, image)
+
+    setMessage(result.data.message || result.data.title)
+    setIsShowAlert(true)
+  }
   const fetchApiGetProduct = async (productId) => {
     const result = await ProductService.getById(productId)
 
@@ -79,10 +95,14 @@ function EditProduct() {
             file={image} setFile={setImage} options={{ height: '52' }} />
 
           <div className="flex justify-end">
-            <button className="bg-ActiveColor px-2 rounded-full hover:opacity-70">Cập nhật</button>
+            <button
+              onClick={handleUpdate}
+              className="bg-ActiveColor px-2 rounded-full hover:opacity-70">
+              Cập nhật</button>
           </div>
         </div>
       </div>
+      <Modals.Alert message={message} isOpen={isShowAlert} handler={() => setIsShowAlert(false)} />
     </div>
   )
 }

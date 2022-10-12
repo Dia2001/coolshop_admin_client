@@ -139,6 +139,7 @@ async function create(fileImage, product) {
 }
 
 async function updateById(id, product, fileImage) {
+  console.log(product)
   const formData = convertObjectToFormData(product)
 
   console.log(formData)

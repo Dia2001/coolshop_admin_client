@@ -6,7 +6,7 @@ import ProductService from '../../services/ProductService'
 import { ProductContext } from '../../Providers/ProductContext'
 import Paginate from '../../components/Paginate'
 
-const pageSize = 10
+const pageSize = 3
 
 function Products() {
   const headersTable = config.headerProductDefaults.filter((item) => item.visible)
