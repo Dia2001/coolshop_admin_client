@@ -208,13 +208,118 @@ async function deleteById(id) {
   }
 }
 
+async function deleteCategoryById(productId, categoryId) {
+  try {
+    const response = await fetch(`${config.BASE_API}/products/categories/delete`, {
+      method: 'POST',
+      headers: getHeaders(),
+      body: JSON.stringify({
+        productId,
+        categoryId
+      })
+    })
+
+    const result = await response.json()
+
+    if (response.status === 200) {
+      return {
+        success: true,
+        data: result
+      }
+    } else {
+      return {
+        success: false,
+        data: result
+      }
+    }
+
+  } catch (e) {
+    console.log(e)
+    return {
+      success: false,
+      data: ''
+    }
+  }
+}
+
+async function deleteSizeById(productId, sizeId) {
+  try {
+    const response = await fetch(`${config.BASE_API}/products/size/delete`, {
+      method: 'POST',
+      headers: getHeaders(),
+      body: JSON.stringify({
+        productId,
+        sizeId: sizeId
+      })
+    })
+
+    const result = await response.json()
+
+    if (response.status === 200) {
+      return {
+        success: true,
+        data: result
+      }
+    } else {
+      return {
+        success: false,
+        data: result
+      }
+    }
+
+  } catch (e) {
+    console.log(e)
+    return {
+      success: false,
+      data: ''
+    }
+  }
+}
+
+async function deleteColorById(productId, colorId) {
+  try {
+    const response = await fetch(`${config.BASE_API}/products/color/delete`, {
+      method: 'POST',
+      headers: getHeaders(),
+      body: JSON.stringify({
+        productId,
+        colorId: colorId
+      })
+    })
+
+    const result = await response.json()
+
+    if (response.status === 200) {
+      return {
+        success: true,
+        data: result
+      }
+    } else {
+      return {
+        success: false,
+        data: result
+      }
+    }
+
+  } catch (e) {
+    console.log(e)
+    return {
+      success: false,
+      data: ''
+    }
+  }
+}
+
 const ProductService = {
   getAll,
   getFilter,
   getById,
   create,
   updateById,
-  deleteById
+  deleteById,
+  deleteCategoryById,
+  deleteSizeById,
+  deleteColorById
 }
 
 export {
@@ -223,7 +328,10 @@ export {
   getById,
   create,
   updateById,
-  deleteById
+  deleteById,
+  deleteCategoryById,
+  deleteSizeById,
+  deleteColorById
 }
 
 export default ProductService

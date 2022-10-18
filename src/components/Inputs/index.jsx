@@ -3,13 +3,15 @@ import ComboBox from './ComboBox'
 import TextArea from './TextArea'
 import ImageDrag from './ImageDrag'
 import CheckList from './CheckList'
+import TagEdit from './TagEdit'
 
 const Inputs = {
   TextBox,
   ComboBox,
   TextArea,
   ImageDrag,
-  CheckList
+  CheckList,
+  TagEdit
 }
 
 export {
@@ -17,7 +19,8 @@ export {
   ComboBox,
   TextArea,
   ImageDrag,
-  CheckList
+  CheckList,
+  TagEdit
 }
 
 export default Inputs

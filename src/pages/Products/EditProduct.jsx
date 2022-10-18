@@ -2,7 +2,10 @@ import { useState, useContext, useEffect } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import ProductService from '../../services/ProductService'
 import { ProductContext } from '../../Providers/ProductContext'
-import { TextBox, ComboBox, TextArea, ImageDrag, CheckList } from '../../components/Inputs'
+import { TextBox, ComboBox, TextArea, ImageDrag, TagEdit } from '../../components/Inputs'
+import AddCategory from './components/AddCategory'
+import AddSize from './components/AddSize'
+import AddColor from './components/AddColor'
 import Modals from '../../components/Modals'
 import config from '../../config'
 
@@ -23,12 +26,27 @@ function EditProduct() {
   const [message, setMessage] = useState('')
   const productId = query.get("productId")
 
+  const [isOpenDialog, setIsOpenDialog] = useState(false)
+  const [titleDialog, setTitleDialog] = useState('')
+  const [componentDiglog, setComponentDialog] = useState()
+  const [callbackDialog, setCallbackDialog] = useState()
+  const [dataDialog, setDataDialog] = useState([])
+
   useEffect(() => {
     document.title = "Sửa sản phẩm"
     if (productId) {
       fetchApiGetProduct(productId)
     }
   }, [])
+
+  const fetchApiGetProduct = async (productId) => {
+    const result = await ProductService.getById(productId)
+
+    if (result.success) {
+      setProduct(result.data)
+      document.title = result.data.name
+    }
+  }
 
   const handleUpdate = async () => {
     const productUpdate = {
@@ -45,13 +63,77 @@ function EditProduct() {
     setMessage(result.data.message || result.data.title)
     setIsShowAlert(true)
   }
-  const fetchApiGetProduct = async (productId) => {
-    const result = await ProductService.getById(productId)
 
+  const handleRemoveCategory = async (categoryId) => {
+    const result = await ProductService.deleteCategoryById(productId, categoryId)
     if (result.success) {
-      setProduct(result.data)
-      document.title = result.data.name
+      fetchApiGetProduct(productId)
     }
+  }
+
+  const handleAddCategory = () => {
+    setTitleDialog("Thêm danh mục cho sản phẩm " + product.name)
+    const component = <AddCategory categories={categories.filter(category => {
+      for (let categoryId of product.categories) {
+        if (category.categoryId === categoryId) {
+          return false
+        }
+      }
+      return true
+    })} categoryIds={dataDialog} setCategoryIds={setDataDialog} />
+    setComponentDialog(component)
+    setCallbackDialog(() => {
+
+    })
+    setIsOpenDialog(true)
+  }
+
+  const handleRemoveSize = async (sizeId) => {
+    const result = await ProductService.deleteSizeById(productId, sizeId)
+    if (result.success) {
+      fetchApiGetProduct(productId)
+    }
+  }
+
+  const handleAddSize = () => {
+    setTitleDialog("Thêm Size cho sản phẩm " + product.name)
+    const component = <AddSize sizes={sizes.filter(size => {
+      for (let sizeId of product.detail.sizes) {
+        if (size.sizeId === sizeId) {
+          return false
+        }
+      }
+      return true
+    })} sizeIds={dataDialog} setSizeIds={setDataDialog} />
+    setComponentDialog(component)
+    setCallbackDialog(() => {
+
+    })
+    setIsOpenDialog(true)
+  }
+
+  const handleRemoveColor = async (colorId) => {
+    const result = await ProductService.deleteColorById(productId, colorId)
+    if (result.success) {
+      fetchApiGetProduct(productId)
+    }
+  }
+
+  const handleAddColor = () => {
+    setTitleDialog("Thêm màu cho sản phẩm " + product.name)
+    const component = <AddColor colors={colors.filter(color => {
+      for (let colorId of product.detail.colors) {
+        if (color.colorId === colorId) {
+          return false
+        }
+      }
+      return true
+    })} colorIds={dataDialog} setColorIds={setDataDialog} />
+    setComponentDialog(component)
+    setCallbackDialog(() => {
+
+    })
+    setIsOpenDialog(true)
   }
 
   useEffect(() => {
@@ -75,6 +157,7 @@ function EditProduct() {
           &gt; {product ? product.name : ''}
         </h6>
       </div>
+      <h5>Thông tin cơ bản</h5>
       <div className="w-full flex flex-wrap border px-2">
         <div className="w-[48%] min-w-[300px] mr-[2%]">
           <TextBox title="Tên" value={name} placeholder="Tên sản phẩm" onChange={setName} />
@@ -91,7 +174,7 @@ function EditProduct() {
         </div>
 
         <div className="w-[48%] min-w-[300px] mr-[2%]">
-          <ImageDrag title="Hình ảnh" sourceLink={product ? config.urlImageProduct + product.image : ''}
+          <ImageDrag title="Ảnh chính" sourceLink={product ? config.urlImageProduct + product.image : ''}
             file={image} setFile={setImage} options={{ height: '52' }} />
 
           <div className="flex justify-end">
@@ -102,7 +185,82 @@ function EditProduct() {
           </div>
         </div>
       </div>
+      <div className="my-2 font-bold flex">
+        <p>Tổng số lượng sàn phẩm còn lại:</p>
+        <p className="mx-2 -mt-2 text-3xl text-red-600"> {product ? product.totalQuantity : ''}</p>
+        <p>Sản phẩm.</p>
+      </div>
+      <h5>Chi tiết</h5>
+
+      {product ?
+        <div className="w-full flex flex-wrap border px-2">
+          <div className="w-[48%] min-w-[300px] mr-[2%]">
+            <div className="flex my-2">
+              <p>Danh mục</p>
+              <div className="ml-2 flex flex-wrap">
+                {product.categories.map((categoryId, index) => {
+                  const category = categories.find(category => category.categoryId === categoryId)
+                  if (category) {
+                    return <TagEdit key={index} title={category.name} confirm={true}
+                      message={`Bạn có muốn xóa danh mục "${category.name}" khỏi sản phẩm này không?`}
+                      onClickRemove={() => handleRemoveCategory(categoryId)} />
+                  }
+                  return ''
+                })}
+              </div>
+              <button className='bg-ActiveColor px-2 rounded-full hover:opacity-70 ml-2'
+                onClick={handleAddCategory}>Thêm</button>
+            </div>
+
+            <div className="flex my-2">
+              <p>Sizes</p>
+              <div className="ml-2 flex flex-wrap">
+                {product.detail.sizes.map((sizeId, index) => {
+                  const size = sizes.find(size => size.sizeId === sizeId)
+                  if (size) {
+                    return <TagEdit key={index} title={size.name} confirm={true}
+                      message={`Bạn có muốn xóa size "${size.name}" khỏi sản phẩm này không?`}
+                      onClickRemove={() => handleRemoveSize(sizeId)} />
+                  }
+                  return ''
+                })}
+              </div>
+              <button className='bg-ActiveColor px-2 rounded-full hover:opacity-70 ml-2'
+                onClick={handleAddSize}>Thêm</button>
+            </div>
+
+            <div className="flex my-2">
+              <p>Màu sắc</p>
+              <div className="ml-2 flex flex-wrap">
+                {product.detail.colors.map((colorId, index) => {
+                  const color = colors.find(color => color.colorId === colorId)
+                  if (color) {
+                    return <TagEdit key={index} title={color.name} confirm={true}
+                      message={`Bạn có muốn xóa màu "${color.name}" khỏi sản phẩm này không?`}
+                      onClickRemove={() => handleRemoveColor(colorId)} />
+                  }
+                  return ''
+                })}
+              </div>
+              <button className='bg-ActiveColor px-2 rounded-full hover:opacity-70 ml-2'
+                onClick={handleAddColor}>Thêm</button>
+            </div>
+          </div>
+
+          <div className="w-[48%] min-w-[300px] mr-[2%]">
+            <p>Danh sách ảnh</p>
+          </div>
+        </div>
+        : ''}
       <Modals.Alert message={message} isOpen={isShowAlert} handler={() => setIsShowAlert(false)} />
+      <Modals.Dialog
+        isOpen={isOpenDialog}
+        setIsOpen={setIsOpenDialog}
+        title={titleDialog}
+        actionName="Thêm"
+        handler={callbackDialog}>
+        {componentDiglog}
+      </Modals.Dialog>
     </div>
   )
 }
