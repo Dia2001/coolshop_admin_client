@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect } from 'react'
+import { useState, useContext, useEffect, useRef } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import ProductService from '../../services/ProductService'
 import { ProductContext } from '../../Providers/ProductContext'
@@ -30,7 +30,7 @@ function EditProduct() {
   const [titleDialog, setTitleDialog] = useState('')
   const [componentDiglog, setComponentDialog] = useState()
   const [callbackDialog, setCallbackDialog] = useState()
-  const [dataDialog, setDataDialog] = useState([])
+  const dataDialog = useRef()
 
   useEffect(() => {
     document.title = "Sửa sản phẩm"
@@ -39,6 +39,7 @@ function EditProduct() {
     }
   }, [])
 
+  // Lấy dữ liệu product về
   const fetchApiGetProduct = async (productId) => {
     const result = await ProductService.getById(productId)
 
@@ -48,6 +49,7 @@ function EditProduct() {
     }
   }
 
+  // Xử lý chỉnh sửa product
   const handleUpdate = async () => {
     const productUpdate = {
       productId: productId,
@@ -64,6 +66,7 @@ function EditProduct() {
     setIsShowAlert(true)
   }
 
+  // Xử lý xóa danh mục khỏi product
   const handleRemoveCategory = async (categoryId) => {
     const result = await ProductService.deleteCategoryById(productId, categoryId)
     if (result.success) {
@@ -71,6 +74,7 @@ function EditProduct() {
     }
   }
 
+  // Xử lý thêm danh mục cho product
   const handleAddCategory = () => {
     setTitleDialog("Thêm danh mục cho sản phẩm " + product.name)
     const component = <AddCategory categories={categories.filter(category => {
@@ -80,21 +84,33 @@ function EditProduct() {
         }
       }
       return true
-    })} categoryIds={dataDialog} setCategoryIds={setDataDialog} />
+    })} setCategoryIds={setDataDialog} />
     setComponentDialog(component)
-    setCallbackDialog(() => {
-
+    setCallbackDialog(() => async (status) => {
+      if (status) {
+        for (let categoryId of getDataDialog()) {
+          await ProductService.addCategoryById(productId, categoryId)
+        }
+      }
+      closeDialog()
     })
     setIsOpenDialog(true)
   }
 
+  // Xử lý xóa size khỏi product
   const handleRemoveSize = async (sizeId) => {
+    if (product.detail.sizes.length <= 1) {
+      setMessage("Không thể xóa toàn bộ size")
+      setIsShowAlert(true)
+      return
+    }
     const result = await ProductService.deleteSizeById(productId, sizeId)
     if (result.success) {
       fetchApiGetProduct(productId)
     }
   }
 
+  // Xử lý thêm size cho product
   const handleAddSize = () => {
     setTitleDialog("Thêm Size cho sản phẩm " + product.name)
     const component = <AddSize sizes={sizes.filter(size => {
@@ -104,21 +120,33 @@ function EditProduct() {
         }
       }
       return true
-    })} sizeIds={dataDialog} setSizeIds={setDataDialog} />
+    })} setSizeIds={setDataDialog} />
     setComponentDialog(component)
-    setCallbackDialog(() => {
-
+    setCallbackDialog(() => async (status) => {
+      if (status) {
+        for (let sizeId of getDataDialog()) {
+          await ProductService.addSizeById(productId, sizeId)
+        }
+      }
+      closeDialog()
     })
     setIsOpenDialog(true)
   }
 
+  // Xử lý xóa màu khỏi product
   const handleRemoveColor = async (colorId) => {
+    if (product.detail.colors.length <= 1) {
+      setMessage("Không thể xóa toàn bộ color")
+      setIsShowAlert(true)
+      return
+    }
     const result = await ProductService.deleteColorById(productId, colorId)
     if (result.success) {
       fetchApiGetProduct(productId)
     }
   }
 
+  // Xử lý thêm màu cho product
   const handleAddColor = () => {
     setTitleDialog("Thêm màu cho sản phẩm " + product.name)
     const component = <AddColor colors={colors.filter(color => {
@@ -128,12 +156,26 @@ function EditProduct() {
         }
       }
       return true
-    })} colorIds={dataDialog} setColorIds={setDataDialog} />
+    })} setColorIds={setDataDialog} />
     setComponentDialog(component)
-    setCallbackDialog(() => {
-
+    setCallbackDialog(() => async (status) => {
+      if (status) {
+        for (let colorId of getDataDialog()) {
+          await ProductService.addColorById(productId, colorId)
+        }
+      }
+      closeDialog()
     })
     setIsOpenDialog(true)
+  }
+
+  const setDataDialog = (value) => dataDialog.current = value
+
+  const getDataDialog = () => dataDialog.current
+
+  const closeDialog = () => {
+    fetchApiGetProduct(productId)
+    setIsOpenDialog(false)
   }
 
   useEffect(() => {
@@ -208,7 +250,8 @@ function EditProduct() {
                   return ''
                 })}
               </div>
-              <button className='bg-ActiveColor px-2 rounded-full hover:opacity-70 ml-2'
+              <button disabled={product.categories.length === categories.length}
+                className='disabled:opacity-70 bg-ActiveColor px-2 h-6 rounded-full hover:opacity-70 ml-2'
                 onClick={handleAddCategory}>Thêm</button>
             </div>
 
@@ -225,7 +268,8 @@ function EditProduct() {
                   return ''
                 })}
               </div>
-              <button className='bg-ActiveColor px-2 rounded-full hover:opacity-70 ml-2'
+              <button disabled={product.detail.sizes.length === sizes.length}
+                className='disabled:opacity-70 bg-ActiveColor px-2 h-6 rounded-full hover:opacity-70 ml-2'
                 onClick={handleAddSize}>Thêm</button>
             </div>
 
@@ -242,7 +286,8 @@ function EditProduct() {
                   return ''
                 })}
               </div>
-              <button className='bg-ActiveColor px-2 rounded-full hover:opacity-70 ml-2'
+              <button disabled={product.detail.colors.length === colors.length}
+                className='disabled:opacity-70 bg-ActiveColor px-2 h-6 rounded-full hover:opacity-70 ml-2'
                 onClick={handleAddColor}>Thêm</button>
             </div>
           </div>
@@ -258,8 +303,8 @@ function EditProduct() {
         setIsOpen={setIsOpenDialog}
         title={titleDialog}
         actionName="Thêm"
-        handler={callbackDialog}>
-        {componentDiglog}
+        handler={callbackDialog}
+        children={componentDiglog}>
       </Modals.Dialog>
     </div>
   )

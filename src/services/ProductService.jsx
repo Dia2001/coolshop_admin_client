@@ -310,6 +310,111 @@ async function deleteColorById(productId, colorId) {
   }
 }
 
+async function addCategoryById(productId, categoryId) {
+  try {
+    const response = await fetch(`${config.BASE_API}/products/categories`, {
+      method: 'POST',
+      headers: getHeaders(),
+      body: JSON.stringify({
+        productId,
+        categoryId
+      })
+    })
+
+    const result = await response.json()
+
+    if (response.status === 200) {
+      return {
+        success: true,
+        data: result
+      }
+    } else {
+      return {
+        success: false,
+        data: result
+      }
+    }
+
+  } catch (e) {
+    console.log(e)
+    return {
+      success: false,
+      data: ''
+    }
+  }
+}
+
+async function addSizeById(productId, sizeId) {
+  try {
+    const response = await fetch(`${config.BASE_API}/products/size`, {
+      method: 'POST',
+      headers: getHeaders(),
+      body: JSON.stringify({
+        productId,
+        sizeId: sizeId
+      })
+    })
+
+    const result = await response.json()
+
+    if (response.status === 200) {
+      return {
+        success: true,
+        data: result
+      }
+    } else {
+      return {
+        success: false,
+        data: result
+      }
+    }
+
+  } catch (e) {
+    console.log(e)
+    return {
+      success: false,
+      data: ''
+    }
+  }
+}
+
+async function addColorById(productId, colorId) {
+  try {
+    const response = await fetch(`${config.BASE_API}/products/color`, {
+      method: 'POST',
+      headers: getHeaders(),
+      body: JSON.stringify({
+        productId,
+        colorId: colorId
+      })
+    })
+
+    const result = await response.json()
+
+    if (response.status === 200) {
+      return {
+        success: true,
+        data: result
+      }
+    } else {
+      return {
+        success: false,
+        data: result
+      }
+    }
+
+  } catch (e) {
+    console.log(e)
+    return {
+      success: false,
+      data: ''
+    }
+  }
+}
+
+
+
+
 const ProductService = {
   getAll,
   getFilter,
@@ -319,7 +424,10 @@ const ProductService = {
   deleteById,
   deleteCategoryById,
   deleteSizeById,
-  deleteColorById
+  deleteColorById,
+  addCategoryById,
+  addSizeById,
+  addColorById
 }
 
 export {
@@ -331,7 +439,10 @@ export {
   deleteById,
   deleteCategoryById,
   deleteSizeById,
-  deleteColorById
+  deleteColorById,
+  addCategoryById,
+  addSizeById,
+  addColorById
 }
 
 export default ProductService
