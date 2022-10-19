@@ -28,7 +28,7 @@ function TagEdit({ title, onClickRemove, confirm, message, ...props }) {
 
   return (
     <div {...props}
-      className='flex pl-2 ml-1 bg-LightBlue rounded-lg'>
+      className='flex pl-2 my-[2px] ml-1 bg-LightBlue rounded-lg'>
       <p>{title ? title : ''}</p> <button className="hover:opacity-70 p-1"
         onClick={handleClickRemove}>
         <MdClose />

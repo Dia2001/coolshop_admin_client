@@ -6,11 +6,12 @@ import { TextBox, ComboBox, TextArea, ImageDrag, TagEdit } from '../../component
 import AddCategory from './components/AddCategory'
 import AddSize from './components/AddSize'
 import AddColor from './components/AddColor'
+import AddQuantity from './components/AddQuantity'
 import Modals from '../../components/Modals'
 import config from '../../config'
 
 function EditProduct() {
-  const { brands, categories, sizes, colors } = useContext(ProductContext)
+  const { brands, categories, sizes, colors, findCategoryById, findSizeById, findColorById } = useContext(ProductContext)
   const location = useLocation()
   const query = new URLSearchParams(location.search)
   const [product, setProduct] = useState()
@@ -31,20 +32,32 @@ function EditProduct() {
   const [componentDiglog, setComponentDialog] = useState()
   const [callbackDialog, setCallbackDialog] = useState()
   const dataDialog = useRef()
+  const [listQuantity, setListQuantity] = useState([])
 
   useEffect(() => {
     document.title = "Sửa sản phẩm"
     if (productId) {
       fetchApiGetProduct(productId)
     }
-  }, [])
+  }, [productId])
 
   // Lấy dữ liệu product về
   const fetchApiGetProduct = async (productId) => {
     const result = await ProductService.getById(productId)
 
     if (result.success) {
-      setProduct(result.data)
+      const product_ = result.data
+      setProduct(product_)
+      const arr = []
+      for (let colorId of product_.detail.colors) {
+        for (let sizeId of product_.detail.sizes) {
+          arr.push({
+            color: findColorById(colorId),
+            size: findSizeById(sizeId)
+          })
+        }
+      }
+      setListQuantity(arr)
       document.title = result.data.name
     }
   }
@@ -227,18 +240,13 @@ function EditProduct() {
           </div>
         </div>
       </div>
-      <div className="my-2 font-bold flex">
-        <p>Tổng số lượng sàn phẩm còn lại:</p>
-        <p className="mx-2 -mt-2 text-3xl text-red-600"> {product ? product.totalQuantity : ''}</p>
-        <p>Sản phẩm.</p>
-      </div>
       <h5>Chi tiết</h5>
 
       {product ?
         <div className="w-full flex flex-wrap border px-2">
           <div className="w-[48%] min-w-[300px] mr-[2%]">
             <div className="flex my-2">
-              <p>Danh mục</p>
+              <p className='font-bold'>Danh mục</p>
               <div className="ml-2 flex flex-wrap">
                 {product.categories.map((categoryId, index) => {
                   const category = categories.find(category => category.categoryId === categoryId)
@@ -256,7 +264,7 @@ function EditProduct() {
             </div>
 
             <div className="flex my-2">
-              <p>Sizes</p>
+              <p className='font-bold'>Sizes</p>
               <div className="ml-2 flex flex-wrap">
                 {product.detail.sizes.map((sizeId, index) => {
                   const size = sizes.find(size => size.sizeId === sizeId)
@@ -274,7 +282,7 @@ function EditProduct() {
             </div>
 
             <div className="flex my-2">
-              <p>Màu sắc</p>
+              <p className='font-bold'>Màu sắc</p>
               <div className="ml-2 flex flex-wrap">
                 {product.detail.colors.map((colorId, index) => {
                   const color = colors.find(color => color.colorId === colorId)
@@ -290,10 +298,22 @@ function EditProduct() {
                 className='disabled:opacity-70 bg-ActiveColor px-2 h-6 rounded-full hover:opacity-70 ml-2'
                 onClick={handleAddColor}>Thêm</button>
             </div>
+            <div>
+              <p className='font-bold my-2'>Số lượng:</p>
+              {listQuantity.map((item, index) => {
+                return <AddQuantity key={index} size={item.size} color={item.color} />
+              })}
+              <div className="my-2 font-bold flex">
+                <p>Tổng số lượng sàn phẩm còn lại:</p>
+                <p className="mx-2 -mt-2 text-3xl text-red-600"> {product ? product.totalQuantity : ''}</p>
+                <p>Sản phẩm.</p>
+              </div>
+            </div>
           </div>
 
           <div className="w-[48%] min-w-[300px] mr-[2%]">
             <p>Danh sách ảnh</p>
+
           </div>
         </div>
         : ''}

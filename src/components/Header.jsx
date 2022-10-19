@@ -11,7 +11,7 @@ const Header = ({ isShowMenu, toggleMenu }) => {
   }
 
   return (
-    <div className="sticky top-0 flex h-12 w-full bg-white justify-between p-0 shadow-md rounded-lg pr-3">
+    <div className="sticky z-50 top-0 flex h-12 w-full bg-white justify-between p-0 shadow-md rounded-lg pr-3">
       <div className="flex items-center pl-2">
         <MdDashboard size={30} />
         <h5 className="my-0 px-2">Dashboard</h5>

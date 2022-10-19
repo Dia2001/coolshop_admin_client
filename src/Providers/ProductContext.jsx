@@ -41,12 +41,27 @@ const ProductContextProvider = ({ children }) => {
     setColors(result.data)
   }
 
+  const findCategoryById = (categoryId) => {
+    return categories.find(category => category.categoryId === categoryId)
+  }
+
+  const findSizeById = (sizeId) => {
+    return sizes.find(size => size.sizeId === sizeId)
+  }
+
+  const findColorById = (colorId) => {
+    return colors.find(color => color.colorId === colorId)
+  }
+
   return (
     <ProductContext.Provider value={{
       brands,
       categories,
       colors,
-      sizes
+      sizes,
+      findCategoryById,
+      findSizeById,
+      findColorById
     }}>
       {children}
     </ProductContext.Provider>
