@@ -14,12 +14,15 @@ const ProductContextProvider = ({ children }) => {
   const [categories, setCategories] = useState([])
 
   useEffect(() => {
-
-    fetchApiGetAllSize()
-    fetchApiGetAllBrand()
-    fetchApiGetAllColor()
-    fetchApiGetAllCategory()
+    initData()
   }, [])
+
+  const initData = async () => {
+    await fetchApiGetAllSize()
+    await fetchApiGetAllBrand()
+    await fetchApiGetAllColor()
+    await fetchApiGetAllCategory()
+  }
 
   const fetchApiGetAllCategory = async () => {
     const result = await CategoryService.getAll()

@@ -1,6 +1,7 @@
 import { useState, useContext, useEffect, useRef } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import ProductService from '../../services/ProductService'
+import GalleryService from '../../services/GalleryService'
 import { ProductContext } from '../../Providers/ProductContext'
 import { TextBox, ComboBox, TextArea, ImageDrag, TagEdit } from '../../components/Inputs'
 import AddCategory from './components/AddCategory'
@@ -39,7 +40,7 @@ function EditProduct() {
     if (productId) {
       fetchApiGetProduct(productId)
     }
-  }, [productId])
+  }, [productId, sizes, colors])
 
   // Lấy dữ liệu product về
   const fetchApiGetProduct = async (productId) => {
@@ -48,16 +49,13 @@ function EditProduct() {
     if (result.success) {
       const product_ = result.data
       setProduct(product_)
-      const arr = []
-      for (let colorId of product_.detail.colors) {
-        for (let sizeId of product_.detail.sizes) {
-          arr.push({
-            color: findColorById(colorId),
-            size: findSizeById(sizeId)
-          })
-        }
-      }
-      setListQuantity(arr)
+      let listQuantity = await ProductService.getQuantityProductById(productId)
+      listQuantity = listQuantity.data.map((item) => ({
+        size: findSizeById(item.sizeId),
+        color: findColorById(item.colorId),
+        quantity: item.quantity
+      }))
+      setListQuantity(listQuantity)
       document.title = result.data.name
     }
   }
@@ -182,6 +180,18 @@ function EditProduct() {
     setIsOpenDialog(true)
   }
 
+  const handleAddQuantity = async (sizeId, colorId, quantity) => {
+    if (quantity <= 0 || quantity === '') {
+      setMessage('Vui lòng nhập số lượng')
+      setIsShowAlert(true)
+      return
+    }
+    const result = await ProductService.addQuantityInSizeAndColor(productId, sizeId, colorId, quantity)
+    if (result.success) {
+      fetchApiGetProduct(productId)
+    }
+  }
+
   const setDataDialog = (value) => dataDialog.current = value
 
   const getDataDialog = () => dataDialog.current
@@ -301,7 +311,8 @@ function EditProduct() {
             <div>
               <p className='font-bold my-2'>Số lượng:</p>
               {listQuantity.map((item, index) => {
-                return <AddQuantity key={index} size={item.size} color={item.color} />
+                return <AddQuantity key={index} size={item.size} color={item.color}
+                  quantity={item.quantity} handlerAdd={handleAddQuantity} />
               })}
               <div className="my-2 font-bold flex">
                 <p>Tổng số lượng sàn phẩm còn lại:</p>

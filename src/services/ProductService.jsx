@@ -412,8 +412,71 @@ async function addColorById(productId, colorId) {
   }
 }
 
+async function getQuantityProductById(productId) {
+  try {
+    const response = await fetch(`${config.BASE_API}/products/quantity/${productId}`, {
+      method: 'GET',
+      headers: getHeaders()
+    })
 
+    const result = await response.json()
 
+    if (response.status === 200) {
+      return {
+        success: true,
+        data: result
+      }
+    } else {
+      return {
+        success: false,
+        data: result
+      }
+    }
+
+  } catch (e) {
+    console.log(e)
+    return {
+      success: false,
+      data: ''
+    }
+  }
+}
+
+async function addQuantityInSizeAndColor(productId, sizeId, colorId, quantity) {
+  try {
+    const response = await fetch(`${config.BASE_API}/products/quantity`, {
+      method: 'POSt',
+      headers: getHeaders(),
+      body: JSON.stringify({
+        productId,
+        sizeId,
+        colorId,
+        quantity
+      })
+    })
+
+    const result = await response.json()
+
+    if (response.status === 200) {
+      return {
+        success: true,
+        data: result
+      }
+    } else {
+      return {
+        success: false,
+        data: result
+      }
+    }
+
+  } catch (e) {
+    console.log(e)
+    return {
+      success: false,
+      data: ''
+    }
+  }
+}
 
 const ProductService = {
   getAll,
@@ -427,7 +490,9 @@ const ProductService = {
   deleteColorById,
   addCategoryById,
   addSizeById,
-  addColorById
+  addColorById,
+  getQuantityProductById,
+  addQuantityInSizeAndColor
 }
 
 export {
@@ -442,7 +507,9 @@ export {
   deleteColorById,
   addCategoryById,
   addSizeById,
-  addColorById
+  addColorById,
+  getQuantityProductById,
+  addQuantityInSizeAndColor
 }
 
 export default ProductService
