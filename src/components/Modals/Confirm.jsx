@@ -1,8 +1,8 @@
 import Portal from '../../portal'
 
 function Confirm({
-  title = 'Confirm',
-  message = 'Confirm message',
+  title = 'Xác nhận',
+  message = 'Bạn có muốn thực hiện hành động này',
   handler,
   isOpen = true
 }) {
@@ -30,11 +30,11 @@ function Confirm({
             </div>
             <div className="w-full h-14 text-center">
               <button
-                className="rounded bg-blue-400 hover:opacity-60 px-5 text-white py-2 w-20 mr-2"
-                onClick={() => handlerClick(true)}>Ok</button>
+                className="rounded bg-blue-400 hover:opacity-60 px-5 text-white py-2 mr-2"
+                onClick={() => handlerClick(true)}>Xác nhận</button>
               <button
                 className="rounded bg-gray-300 hover:opacity-60 px-2 py-2 w-20 ml-2"
-                onClick={() => handlerClick(false)}>Cancel</button>
+                onClick={() => handlerClick(false)}>Hủy</button>
             </div>
           </div>
         </div>

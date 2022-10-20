@@ -111,7 +111,6 @@ function Products() {
                     </td>
                   }
                   if (key === 'image') {
-                    console.log(product.image)
                     return <td key={index}>
                       <img alt='' className="w-10 h-10 object-contain" src={`${config.urlImageProduct}${product[key]}`} ></img>
                     </td>

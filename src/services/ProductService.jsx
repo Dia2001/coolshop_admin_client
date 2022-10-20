@@ -208,13 +208,291 @@ async function deleteById(id) {
   }
 }
 
+async function deleteCategoryById(productId, categoryId) {
+  try {
+    const response = await fetch(`${config.BASE_API}/products/categories/delete`, {
+      method: 'POST',
+      headers: getHeaders(),
+      body: JSON.stringify({
+        productId,
+        categoryId
+      })
+    })
+
+    const result = await response.json()
+
+    if (response.status === 200) {
+      return {
+        success: true,
+        data: result
+      }
+    } else {
+      return {
+        success: false,
+        data: result
+      }
+    }
+
+  } catch (e) {
+    console.log(e)
+    return {
+      success: false,
+      data: ''
+    }
+  }
+}
+
+async function deleteSizeById(productId, sizeId) {
+  try {
+    const response = await fetch(`${config.BASE_API}/products/size/delete`, {
+      method: 'POST',
+      headers: getHeaders(),
+      body: JSON.stringify({
+        productId,
+        sizeId: sizeId
+      })
+    })
+
+    const result = await response.json()
+
+    if (response.status === 200) {
+      return {
+        success: true,
+        data: result
+      }
+    } else {
+      return {
+        success: false,
+        data: result
+      }
+    }
+
+  } catch (e) {
+    console.log(e)
+    return {
+      success: false,
+      data: ''
+    }
+  }
+}
+
+async function deleteColorById(productId, colorId) {
+  try {
+    const response = await fetch(`${config.BASE_API}/products/color/delete`, {
+      method: 'POST',
+      headers: getHeaders(),
+      body: JSON.stringify({
+        productId,
+        colorId: colorId
+      })
+    })
+
+    const result = await response.json()
+
+    if (response.status === 200) {
+      return {
+        success: true,
+        data: result
+      }
+    } else {
+      return {
+        success: false,
+        data: result
+      }
+    }
+
+  } catch (e) {
+    console.log(e)
+    return {
+      success: false,
+      data: ''
+    }
+  }
+}
+
+async function addCategoryById(productId, categoryId) {
+  try {
+    const response = await fetch(`${config.BASE_API}/products/categories`, {
+      method: 'POST',
+      headers: getHeaders(),
+      body: JSON.stringify({
+        productId,
+        categoryId
+      })
+    })
+
+    const result = await response.json()
+
+    if (response.status === 200) {
+      return {
+        success: true,
+        data: result
+      }
+    } else {
+      return {
+        success: false,
+        data: result
+      }
+    }
+
+  } catch (e) {
+    console.log(e)
+    return {
+      success: false,
+      data: ''
+    }
+  }
+}
+
+async function addSizeById(productId, sizeId) {
+  try {
+    const response = await fetch(`${config.BASE_API}/products/size`, {
+      method: 'POST',
+      headers: getHeaders(),
+      body: JSON.stringify({
+        productId,
+        sizeId: sizeId
+      })
+    })
+
+    const result = await response.json()
+
+    if (response.status === 200) {
+      return {
+        success: true,
+        data: result
+      }
+    } else {
+      return {
+        success: false,
+        data: result
+      }
+    }
+
+  } catch (e) {
+    console.log(e)
+    return {
+      success: false,
+      data: ''
+    }
+  }
+}
+
+async function addColorById(productId, colorId) {
+  try {
+    const response = await fetch(`${config.BASE_API}/products/color`, {
+      method: 'POST',
+      headers: getHeaders(),
+      body: JSON.stringify({
+        productId,
+        colorId: colorId
+      })
+    })
+
+    const result = await response.json()
+
+    if (response.status === 200) {
+      return {
+        success: true,
+        data: result
+      }
+    } else {
+      return {
+        success: false,
+        data: result
+      }
+    }
+
+  } catch (e) {
+    console.log(e)
+    return {
+      success: false,
+      data: ''
+    }
+  }
+}
+
+async function getQuantityProductById(productId) {
+  try {
+    const response = await fetch(`${config.BASE_API}/products/quantity/${productId}`, {
+      method: 'GET',
+      headers: getHeaders()
+    })
+
+    const result = await response.json()
+
+    if (response.status === 200) {
+      return {
+        success: true,
+        data: result
+      }
+    } else {
+      return {
+        success: false,
+        data: result
+      }
+    }
+
+  } catch (e) {
+    console.log(e)
+    return {
+      success: false,
+      data: ''
+    }
+  }
+}
+
+async function addQuantityInSizeAndColor(productId, sizeId, colorId, quantity) {
+  try {
+    const response = await fetch(`${config.BASE_API}/products/quantity`, {
+      method: 'POSt',
+      headers: getHeaders(),
+      body: JSON.stringify({
+        productId,
+        sizeId,
+        colorId,
+        quantity
+      })
+    })
+
+    const result = await response.json()
+
+    if (response.status === 200) {
+      return {
+        success: true,
+        data: result
+      }
+    } else {
+      return {
+        success: false,
+        data: result
+      }
+    }
+
+  } catch (e) {
+    console.log(e)
+    return {
+      success: false,
+      data: ''
+    }
+  }
+}
+
 const ProductService = {
   getAll,
   getFilter,
   getById,
   create,
   updateById,
-  deleteById
+  deleteById,
+  deleteCategoryById,
+  deleteSizeById,
+  deleteColorById,
+  addCategoryById,
+  addSizeById,
+  addColorById,
+  getQuantityProductById,
+  addQuantityInSizeAndColor
 }
 
 export {
@@ -223,7 +501,15 @@ export {
   getById,
   create,
   updateById,
-  deleteById
+  deleteById,
+  deleteCategoryById,
+  deleteSizeById,
+  deleteColorById,
+  addCategoryById,
+  addSizeById,
+  addColorById,
+  getQuantityProductById,
+  addQuantityInSizeAndColor
 }
 
 export default ProductService

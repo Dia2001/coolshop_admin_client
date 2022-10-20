@@ -1,14 +1,17 @@
 import Confirm from './Confirm'
 import Alert from './Alert'
+import Dialog from './Dialog'
 
 const Modals = {
   Confirm,
-  Alert
+  Alert,
+  Dialog
 }
 
 export {
   Confirm,
-  Alert
+  Alert,
+  Dialog
 }
 
 export default Modals 
