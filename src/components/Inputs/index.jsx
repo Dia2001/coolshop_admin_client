@@ -4,6 +4,7 @@ import TextArea from './TextArea'
 import ImageDrag from './ImageDrag'
 import CheckList from './CheckList'
 import TagEdit from './TagEdit'
+import ImagesDrag from './ImagesDrag'
 
 const Inputs = {
   TextBox,
@@ -11,7 +12,8 @@ const Inputs = {
   TextArea,
   ImageDrag,
   CheckList,
-  TagEdit
+  TagEdit,
+  ImagesDrag
 }
 
 export {
@@ -20,7 +22,8 @@ export {
   TextArea,
   ImageDrag,
   CheckList,
-  TagEdit
+  TagEdit,
+  ImagesDrag
 }
 
 export default Inputs
