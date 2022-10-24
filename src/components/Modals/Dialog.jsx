@@ -15,7 +15,7 @@ function Dialog({
   if (isOpen) {
     return (
       <div className="bg-black/20 fixed top-0 left-0 right-0 bottom-0">
-        <div className="position absolute -translate-x-1/2 -translate-y-[80%] top-1/2 left-1/2">
+        <div className="position absolute -translate-x-1/2 -translate-y-[60%] top-1/2 left-1/2">
           <div className='bg-white'>
             <div>
               <div className="w-full h-8 flex items-center justify-between bg-gray-500" >

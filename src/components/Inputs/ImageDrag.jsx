@@ -37,7 +37,7 @@ function ImageDrag({ title, file, sourceLink, setFile, options }) {
         className={`border cursor-pointer w-${width} relative text-center h-${height} border-x-2 border-y-2 border-gray-500`}>
 
         {file || sourceLink ?
-          <img className="w-full h-full absolute" src={src} alt="" />
+          <img className="w-full h-full absolute object-cover" src={src} alt="" />
           :
           <>
             <p className="mt-14">Thả ảnh hoặc nhấn vào đây</p>

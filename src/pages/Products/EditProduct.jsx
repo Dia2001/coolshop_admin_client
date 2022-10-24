@@ -3,11 +3,12 @@ import { Link, useLocation, useNavigate } from 'react-router-dom'
 import ProductService from '../../services/ProductService'
 import GalleryService from '../../services/GalleryService'
 import { ProductContext } from '../../Providers/ProductContext'
-import { TextBox, ComboBox, TextArea, ImageDrag, TagEdit } from '../../components/Inputs'
+import { TextBox, ComboBox, TextArea, ImageDrag, ImagesDrag, TagEdit } from '../../components/Inputs'
 import AddCategory from './components/AddCategory'
 import AddSize from './components/AddSize'
 import AddColor from './components/AddColor'
 import AddQuantity from './components/AddQuantity'
+import ImageList from './components/ImageList'
 import Modals from '../../components/Modals'
 import config from '../../config'
 
@@ -19,6 +20,7 @@ function EditProduct() {
 
   const navigate = useNavigate()
   const [image, setImage] = useState()
+  const [images, setImages] = useState([])
   const [name, setName] = useState('')
   const [price, setPrice] = useState(1000)
   const [description, setDescription] = useState('')
@@ -57,6 +59,14 @@ function EditProduct() {
       }))
       setListQuantity(listQuantity)
       document.title = result.data.name
+    }
+    await fetchApiGetAllGalleryInProduct(productId)
+  }
+
+  const fetchApiGetAllGalleryInProduct = async (productId) => {
+    const result = await GalleryService.getAllGalleryInProductById(productId)
+    if (result.success) {
+      setImages(result.data)
     }
   }
 
@@ -192,6 +202,18 @@ function EditProduct() {
     }
   }
 
+  const handleAddImages = async () => {
+    setTitleDialog("Thêm nhiều ảnh cho sản phẩm " + product.name)
+    const component = <ImagesDrag options={{ width: '500', height: '300' }} />
+    setComponentDialog(component)
+    setCallbackDialog(() => async (status) => {
+      if (status) {
+      }
+      closeDialog()
+    })
+    setIsOpenDialog(true)
+  }
+
   const setDataDialog = (value) => dataDialog.current = value
 
   const getDataDialog = () => dataDialog.current
@@ -323,8 +345,15 @@ function EditProduct() {
           </div>
 
           <div className="w-[48%] min-w-[300px] mr-[2%]">
-            <p>Danh sách ảnh</p>
-
+            <div className="flex justify-between mt-2">
+              <p>Danh sách ảnh</p>
+              <button disabled={product.detail.colors.length === colors.length}
+                className='disabled:opacity-70 bg-ActiveColor px-2 h-6 rounded-full hover:opacity-70 ml-2'
+                onClick={handleAddImages}>Thêm</button>
+            </div>
+            <div>
+              <ImageList images={images} />
+            </div>
           </div>
         </div>
         : ''}
