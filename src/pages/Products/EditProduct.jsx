@@ -10,6 +10,7 @@ import AddColor from './components/AddColor'
 import AddQuantity from './components/AddQuantity'
 import ImageList from './components/ImageList'
 import Modals from '../../components/Modals'
+import { convertObjectToFormData } from '../../utils'
 import config from '../../config'
 
 function EditProduct() {
@@ -29,6 +30,8 @@ function EditProduct() {
   const [isShowAlert, setIsShowAlert] = useState(false)
   const [message, setMessage] = useState('')
   const productId = query.get("productId")
+  const [addImages, setAddImages] = useState([])
+  const imagesUpload = useRef([])
 
   const [isOpenDialog, setIsOpenDialog] = useState(false)
   const [titleDialog, setTitleDialog] = useState('')
@@ -36,6 +39,10 @@ function EditProduct() {
   const [callbackDialog, setCallbackDialog] = useState()
   const dataDialog = useRef()
   const [listQuantity, setListQuantity] = useState([])
+
+  const [isOpenConfirm, setIsOpenConfirm] = useState(false)
+  const [messageConfirm, setMessageConfirm] = useState('')
+  const [callbackConfirm, setCallbackConfirm] = useState()
 
   useEffect(() => {
     document.title = "Sửa sản phẩm"
@@ -204,14 +211,41 @@ function EditProduct() {
 
   const handleAddImages = async () => {
     setTitleDialog("Thêm nhiều ảnh cho sản phẩm " + product.name)
-    const component = <ImagesDrag options={{ width: '500', height: '300' }} />
+    const component = <ImagesDrag files={addImages} setFiles={setAddImages} options={{ width: '500', height: '300' }} />
     setComponentDialog(component)
-    setCallbackDialog(() => async (status) => {
-      if (status) {
-      }
-      closeDialog()
-    })
+    setCallbackDialog(() => callbackAddImage)
     setIsOpenDialog(true)
+  }
+
+  const handleDeleteImage = (galleryId) => {
+    setCallbackConfirm(() => async (status) => {
+      setIsOpenConfirm(false)
+      setCallbackConfirm(undefined)
+      if (status) {
+        const result = await GalleryService.deleteGalleryById(galleryId)
+
+        if (result.success) {
+          fetchApiGetAllGalleryInProduct(productId)
+        } else {
+          alert("Có lỗi xảy ra")
+        }
+      }
+    })
+    setMessageConfirm("Chắc chắn muốn xóa ảnh này")
+    setIsOpenConfirm(true)
+  }
+
+  useEffect(() => {
+    imagesUpload.current = addImages
+  }, [addImages])
+
+  const callbackAddImage = async (status) => {
+    if (status) {
+      console.log(imagesUpload.current)
+      await GalleryService.uploadImages(productId, imagesUpload.current)
+    }
+    setAddImages([])
+    closeDialog()
   }
 
   const setDataDialog = (value) => dataDialog.current = value
@@ -352,12 +386,16 @@ function EditProduct() {
                 onClick={handleAddImages}>Thêm</button>
             </div>
             <div>
-              <ImageList images={images} />
+              <ImageList onClickDelete={handleDeleteImage} images={images} />
             </div>
           </div>
         </div>
         : ''}
       <Modals.Alert message={message} isOpen={isShowAlert} handler={() => setIsShowAlert(false)} />
+      <Modals.Confirm
+        isOpen={isOpenConfirm}
+        message={messageConfirm}
+        handler={callbackConfirm} />
       <Modals.Dialog
         isOpen={isOpenDialog}
         setIsOpen={setIsOpenDialog}

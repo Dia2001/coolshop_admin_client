@@ -167,10 +167,10 @@ function Products() {
                         <Link to={`${config.routes.editProduct}?productId=${product.productId}`}
                           className="bg-ActiveColor px-1 mx-1 rounded-md hover:opacity-70"
                         >Sửa</Link>
-                        <button
+                        {/* <button
                           onClick={() => handleDelete(product.productId)}
                           className="bg-ErrorColor text-white px-1 rounded-md hover:opacity-70"
-                        >Xóa</button>
+                        >Xóa</button> */}
                       </div>
                     </td>
                   }

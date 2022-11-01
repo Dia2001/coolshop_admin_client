@@ -21,11 +21,9 @@ function ImagesDrag({ files, setFiles, options }) {
       if (typeof setFiles === 'function') {
         let arrFile = []
         if (Array.isArray(files)) {
-          arrFile = [...files, filesTmp]
-        } else {
           arrFile = [...filesTmp]
         }
-        setFiles(arrFile)
+        setFiles(prev => [...prev, ...arrFile])
       }
     }
   }
