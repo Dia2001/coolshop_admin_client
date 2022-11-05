@@ -381,7 +381,7 @@ function EditProduct() {
           <div className="w-[48%] min-w-[300px] mr-[2%]">
             <div className="flex justify-between mt-2">
               <p>Danh sách ảnh</p>
-              <button disabled={product.detail.colors.length === colors.length}
+              <button
                 className='disabled:opacity-70 bg-ActiveColor px-2 h-6 rounded-full hover:opacity-70 ml-2'
                 onClick={handleAddImages}>Thêm</button>
             </div>
