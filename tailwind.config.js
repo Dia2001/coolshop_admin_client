@@ -16,26 +16,44 @@ module.exports = {
       // => @media (min-width: 1280px) { ... }
     },
     extend: {
-      backgroundImage: {
-        'GradientO1': 'linear-gradient(120deg,#89F7FE 0%,#66A6FF 100%)',
-        'GradientO2': 'linear-gradient(to left,#0061FF 0%,#60EFFF 100%)',
+      
+      //customize own padding
+      padding:{
+        '1x':'8px',
+        '2x':'16px',
+        '3x':'24px',
+        '4x':'32px',
+        '5x':'48px',
       },
-      colors: {
-        'Primary': '#395B64',
-        'MainBlue': '#395B64',
-        'LightBlue': '#9CBBFC',
-        'DarkBlue': '#4741A6',
+      //customize own margin
+      margin:{
+        '1x':'8px',
+        '2x':'16px',
+        '3x':'24px',
+        '4x':'32px',
+        '5x':'48px',
+      },
+      backgroundImage: {
+        'GradientO1':'linear-gradient(120deg,#89F7FE 0%,#66A6FF 100%)',
+        'GradientO2':'linear-gradient(to left,#0061FF 0%,#60EFFF 100%)',
+      },
+      colors:{
+        'Primary':'#A5C9CA',
+        'MainBlue':'#E7F6F2',
+        'LightBlue':'#9CBBFC',
+        'DarkBlue':'#4741A6',
+       
 
-        'BlackCool': '#2C3333',
-        'Black75': '#959898',
-        'Black50': '#959898',
-        'Black25': '#cacbcb',
-        'Black10': '#e9eaea',
-        'Black5': '#f4f4f4',
+        'BlackCool':'#2C3333',
+        'Black75':'#616666',
+        'Black50':'#959898',
+        'Black25':'#cacbcb',
+        'Black10':'#e9eaea',
+        'Black5':'#f4f4f4',
 
-        'ErrorColor': '#e85353',
-        'WarningColor': '#F9CE69',
-        'ActiveColor': '#A7D129'
+        'ErrorColor':'#E85353',
+        'WarningColor':'#F9CE69',
+        'ActiveColor':'#A7D129'
       }
     },
   },

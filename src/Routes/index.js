@@ -2,7 +2,7 @@ import DashBoardLayout from "../layouts/DashBoardLayout";
 import config from "../config"
 
 import Request from "../pages/Request";
-import DashBoard from "../pages/DashBoard";
+import DashBoard from "../pages/dashboard/DashBoard";
 import Notifition from "../pages/Notifition";
 import Category from "../pages/Category";
 import Orders from "../pages/Orders";
