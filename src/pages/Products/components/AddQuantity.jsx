@@ -1,6 +1,6 @@
 import { useState } from "react"
 
-function AddQuantity({ key, size, color, quantity, handlerAdd, handlerSub }) {
+function AddQuantity({ size, color, quantity, handlerAdd, handlerSub }) {
   const [quantityValue, setQuantityValue] = useState('')
 
   const handleChangeQuantity = (quantity) => {
@@ -17,7 +17,7 @@ function AddQuantity({ key, size, color, quantity, handlerAdd, handlerSub }) {
 
   if (size && color) {
     return (
-      <div className="flex flex-wrap" key={key ? key : ''}>
+      <div className="flex flex-wrap">
         <div className="flex flex-wrap my-1">
           <p className="mx-1">Size: </p>
           <p className="bg-gray-200 px-1">{size.name}</p>

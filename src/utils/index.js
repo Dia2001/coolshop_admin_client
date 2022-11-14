@@ -1,3 +1,7 @@
+export function enPriceVnd(num) {
+  return num.toLocaleString();
+}
+
 export const getToken = () => localStorage.getItem("token")
 
 export const getHeaders = () => {
