@@ -21,8 +21,8 @@ function AddQuantity({ size, color, quantity, handlerAdd, handlerSub }) {
         <div className="flex flex-wrap my-1">
           <p className="mx-1">Size: </p>
           <p className="bg-gray-200 px-1">{size.name}</p>
-          <p className="bg-gray-200 px-1">{color.name}</p>
           <p className="mx-1">Color: </p>
+          <p className="bg-gray-200 px-1">{color.name}</p>
           <p className="ml-1 mr-2">Tồn: </p>
           <p className="bg-blue-200 px-1">{quantity}</p>
           <div className="w-[1px] bg-black h-6 mx-1"></div>

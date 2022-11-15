@@ -3,7 +3,7 @@ import { HiOutlineEyeOff, HiOutlineEye } from 'react-icons/hi'
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom'
-import iconcoolshop from "../assets/coolshopiconfake.png";
+import iconcoolshop from "../assets/logo-2.png";
 import AuthService from "../services/AuthService"
 import { AppContext } from "../Providers/ApplicationContext"
 import Modals from '../components/Modals'

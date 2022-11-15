@@ -13,7 +13,8 @@ function MenuProfile({ toggleMenu, isShowMenu }) {
   }
   if (userLogin) {
     return (
-      <div className={`${isShowMenu ? 'w-[30vw]' : 'translate-x-[100%]'} transition-al fixed h-[100vh] right-0 rounded-tl-2xl rounded-bl-2xl bg-white shadow-lg`}>
+      <div className={`${isShowMenu ? 'w-[30vw]' : 'translate-x-[100%]'} transition-al fixed h-[100vh] right-0 rounded-tl-2xl rounded-bl-2xl bg-white shadow-lg`}
+        style={{ zIndex: 100 }}>
         {isShowMenu ?
           <button
             onClick={handleToggleMenu}

@@ -1,84 +1,26 @@
-import { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { ProductContext } from '../../Providers/ProductContext'
 import OrderService from '../../services/OrderService'
 import { enPriceVnd } from '../../utils'
-import { Link } from 'react-router-dom'
-import config from '../../config'
 import OrderDetail from './OrderDetail'
+import Paginate from '../../components/Paginate'
+import Tippy from '@tippyjs/react'
+import 'tippy.js/dist/tippy.css'
+import config from '../../config'
+import { colorStatus, orderStatus, orderHeaderConfig } from './common'
 
-const orderHeaderConfig = [
-  {
-    key: 'orderId',
-    value: 'Mã đơn hàng',
-    visible: true,
-    scale: 3
-  },
-  {
-    key: 'nameShip',
-    value: 'Tên khách hàng',
-    visible: true,
-    scale: 3,
-  },
-  {
-    key: 'phoneShip',
-    value: 'Số điện thoại',
-    visible: true,
-    scale: 3,
-  },
-  {
-    key: 'addressShip',
-    value: 'Địa chỉ giao hàng',
-    visible: true,
-    scale: 3,
-  },
-  {
-    key: 'price',
-    value: 'Tổng giá trị đơn hàng',
-    visible: true,
-    scale: 3,
-  },
-  {
-    key: 'orderStatusId',
-    value: 'Trạng thái',
-    visible: true,
-    scale: 3,
-  },
-  {
-    key: 'detail',
-    value: 'Chi tiết',
-    visible: true,
-    scale: 3
-  }
-]
-
-const orderStatus = {
-  created: "Chờ xác nhận",
-  confirm: "Đã xác nhận đơn hàng",
-  waitForPay: "Chờ thanh toán",
-  deliveredToTransporter: 'Đã giao hàng cho đơn vị vận chuyển',
-  shipping: "Đang vận chuyển",
-  delivered: "Đã giao hàng",
-  cancelled: "Đã hủy"
-}
-
-const colorStatus = {
-  created: "#ffff00",
-  confirm: "#40ff2b",
-  waitForPay: "#55007f",
-  deliveredToTransporter: '#555500',
-  shipping: "#0000ff",
-  delivered: "#005500",
-  cancelled: "#d00101"
-}
+const pageSize = 15
 
 function Orders() {
-  const { ischange, brands, categories, colors, sizes } = useContext(ProductContext)
+  const { ischange, brands, categories, colors, sizes, findColorById, findSizeById } = useContext(ProductContext)
   const [orders, setOrders] = useState([])
   const [typeShow, setTypeShow] = useState()
   const optionDefault = { "value": "default", "label": "Tất cả các đơn" }
   const [ordersShow, setOrdersShow] = useState(orders)
   const [isShowDetail, setIsShowDetail] = useState(false)
   const [orderShow, setOrderShow] = useState({})
+  const [totalPage, setTotalPage] = useState(1)
+  const [currentPage, setCurrentPage] = useState(1)
   const [optionsFilter, setOptionsFileter] = useState([
     optionDefault
   ])
@@ -91,9 +33,8 @@ function Orders() {
     } else {
       ordersTmp = orders.filter(order => order.orderStatusId === typeShow)
     }
-    setOrdersShow(ordersTmp)
+    handlePaging(1, ordersTmp)
   }, [typeShow, orders])
-
 
   useEffect(() => {
     let options = []
@@ -112,7 +53,10 @@ function Orders() {
   }, [ischange, brands])
 
   useEffect(() => {
-    setOrdersShow(orders)
+    let i = orders.length - (orders.length % pageSize)
+    let totalPageTmp = orders.length % pageSize === 0 ? (i / pageSize) : (i / pageSize + 1);
+    setTotalPage(totalPageTmp)
+    handlePaging(1, orders)
   }, [orders])
 
   const fetchApiOrder = async () => {
@@ -125,20 +69,79 @@ function Orders() {
 
   const showDetail = (status, order) => {
     setIsShowDetail(status)
-    setOrderShow(order)
+    let totalPrice = 0
+
+    const orderTmp = {
+      ...order,
+      status: orderStatus[order.orderStatusId],
+      date: order.createDate,
+      orderDetail: order.orderDetail.map((item) => {
+        let size = findSizeById(item.sizeId)
+        let color = findColorById(item.colorId)
+        let description = `Màu: ${color ? color.name : ''} , Size: ${size ? size.name : ''}`
+        totalPrice += item.price * item.quantity
+
+        return {
+          ...item,
+          name: item.productName,
+          description: description,
+          amount: item.quantity,
+          img: config.urlImageProduct + item.productImage,
+        }
+      })
+    }
+    orderTmp.totalPrice = totalPrice
+
+    setOrderShow(orderTmp)
   }
 
   const closeDetail = () => {
     setIsShowDetail(false)
-    setOrdersShow({})
+    setOrderShow({})
+  }
+
+  const handleClickCopy = () => {
+    navigator.clipboard.writeText(orderShow.orderId)
+  }
+
+  const handlePaging = (page, array) => {
+    let p = (page - 1) * pageSize
+    let count = 0
+    let ordersTmp = []
+    for (p; p < array.length; p++) {
+      if (count < pageSize) {
+        ordersTmp.push(array[p])
+        count++
+      }
+    }
+    setCurrentPage(page)
+    setOrdersShow(ordersTmp)
+  }
+
+  const handleChangeOrder = () => {
+    fetchApiOrder()
   }
 
   return (
     <div className='p-2'>
-      <div className='flex flex-wrap justify-between items-center'>
-        <h5>Đơn hàng {`: ${isShowDetail ? orderShow.orderId : ''}`}</h5>
+      <div className='flex mb-4 flex-wrap justify-between items-center'>
+        {isShowDetail ?
+          <div className='flex'>
+            <h5>Mã đơn hàng : {orderShow.orderId}</h5>
+            <button onClick={handleClickCopy}
+              className="rounded-full border px-2 py-1 ml-4 hover:bg-gray-100">
+              Copy
+            </button>
+          </div>
+          :
+          <h5>Đơn hàng</h5>
+        }
 
-        {isShowDetail ? '' :
+        {isShowDetail ?
+          <button onClick={closeDetail}
+            className="bg-DarkBlue text-center rounded-full">
+            <h6 className="px-2 py-1  text-white font-bold">Quay lại</h6>
+          </button> :
           <div className='flex flex-wrap items-center'>
             <h6 className="font-bold mr-2">Sắp xếp theo: </h6>
             <select
@@ -154,7 +157,7 @@ function Orders() {
         }
       </div>
       {isShowDetail ?
-        <OrderDetail orders={ordersShow} back={closeDetail} />
+        <OrderDetail order={orderShow} back={closeDetail} handleChangeOrder={handleChangeOrder} />
         :
         <div>
           <table className="w-full border">
@@ -172,12 +175,25 @@ function Orders() {
                 return (
                   <tr key={index}>
                     {orderHeaderConfig.map((item, indexConfig) => {
+                      if (item.key === 'orderId') {
+                        return (
+                          <td key={indexConfig}>
+                            <Tippy content="Nhấn để copy">
+                              <span onClick={() => navigator.clipboard.writeText(order[item.key])}
+                                className='cursor-pointer'>
+                                {order[item.key]}
+                              </span>
+                            </Tippy>
+                          </td>
+                        )
+                      }
+
                       if (item.key === 'orderStatusId') {
                         const orderKey = order[item.key]
                         return (
                           <td key={indexConfig}>
                             <span style={{ backgroundColor: colorStatus[orderKey] }}
-                              className={`px-1 rounded-lg text-[${colorStatus[orderKey]}]`}>
+                              className={`px-2 py-1 rounded-lg text-xl text-[${colorStatus[orderKey]}]`}>
                               {orderStatus[orderKey]}
                             </span>
                           </td>
@@ -193,12 +209,12 @@ function Orders() {
                         )
                       }
 
-                      if (item.key === 'detail') {
+                      if (item.key === 'option') {
                         return (
                           <td key={indexConfig}>
-                            <div className='cursor-pointer bg-Primary py-1 px-2 rounded-full hover:opacity-70'
+                            <div className='cursor-pointer bg-Primary my-1 inline-block px-2 rounded-full hover:opacity-70'
                               onClick={() => showDetail(true, order)}>
-                              Xem
+                              Chi tiết
                             </div>
                           </td>
                         )
@@ -215,6 +231,7 @@ function Orders() {
               })}
             </tbody>
           </table>
+          <Paginate totalPage={totalPage} currentPage={currentPage} callback={handlePaging} />
         </div>
       }
     </div>
