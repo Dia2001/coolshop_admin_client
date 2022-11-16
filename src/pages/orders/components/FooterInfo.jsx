@@ -43,6 +43,7 @@ const FooterInfo = ({ order, orderStatusId, setOrderStatusId, handleChangeOrder 
     const result = await OrderService.updateOrder(orderUpdate)
     if (result.success) {
       alert('Cập nhật trạng thái thành công')
+      handleChangeOrder()
     }
   }
 
