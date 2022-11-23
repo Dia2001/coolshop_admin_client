@@ -7,7 +7,7 @@ import StatsList from './components/StatsList'
 const DashBoard = () => {
   document.title = 'Dashboard'
   return (
-    <div className="w-[1240px] mx-auto my-8">
+    <div className="w-[1240px] px-4 mx-auto my-8">
       <StatsList />
       <ChartAndNotification />
       <PieChart />

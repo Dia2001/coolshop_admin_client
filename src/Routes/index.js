@@ -15,13 +15,19 @@ import Login from "../pages/Login";
 import OrderDetail from "../pages/orders/OrderDetail"
 
 import { ProductContextProvider } from "../Providers/ProductContext"
+import { DashboardContextProvider } from "../Providers/DashboardContext";
 
 export const publicRouter = [
   { path: config.routes.login, component: Login, layout: null },
 ]
 
 export const privateRouter = [
-  { path: config.routes.home, component: DashBoard, layout: DashBoardLayout },
+  {
+    path: config.routes.home,
+    component: DashBoard,
+    layout: DashBoardLayout,
+    context: DashboardContextProvider
+  },
   {
     path: config.routes.request, component: Request, layout: DashBoardLayout
   },

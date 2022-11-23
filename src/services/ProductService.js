@@ -71,6 +71,67 @@ async function getFilter({ ...filter }) {
     }
   }
 }
+
+async function listofcategoriesandfeaturedproducts() {
+  try {
+    const response = await fetch(`${config.BASE_API}/products/listofcategoriesandfeaturedproducts`, {
+      method: 'GET',
+      headers: getHeaders()
+    })
+
+    const result = await response.json()
+
+    if (response.status === 200) {
+      return {
+        success: true,
+        data: result
+      }
+    } else {
+      return {
+        success: false,
+        data: result
+      }
+    }
+
+  } catch (e) {
+    console.log(e)
+    return {
+      success: false,
+      data: ''
+    }
+  }
+}
+
+async function getProductofcategory() {
+  try {
+    const response = await fetch(`${config.BASE_API}/products/productofcategory`, {
+      method: 'GET',
+      headers: getHeaders()
+    })
+
+    const result = await response.json()
+
+    if (response.status === 200) {
+      return {
+        success: true,
+        data: result
+      }
+    } else {
+      return {
+        success: false,
+        data: result
+      }
+    }
+
+  } catch (e) {
+    console.log(e)
+    return {
+      success: false,
+      data: ''
+    }
+  }
+}
+
 async function getById(id) {
   try {
     const response = await fetch(`${config.BASE_API}/products/${id}`, {
@@ -478,10 +539,75 @@ async function addQuantityInSizeAndColor(productId, sizeId, colorId, quantity) {
   }
 }
 
+async function revenuemonthly(object) {
+  try {
+    const response = await fetch(`${config.BASE_API}/products/statistics/revenuemonthly`, {
+      method: 'POST',
+      headers: getHeaders(),
+      body: JSON.stringify(object)
+    })
+
+    const result = await response.json()
+
+    if (response.status === 200) {
+      return {
+        success: true,
+        data: result
+      }
+    } else {
+      return {
+        success: false,
+        data: result
+      }
+    }
+
+  } catch (e) {
+    console.log(e)
+    return {
+      success: false,
+      data: ''
+    }
+  }
+}
+
+async function revenuemonth(object) {
+  try {
+    const response = await fetch(`${config.BASE_API}/products/statistics/revenuemonth`, {
+      method: 'POST',
+      headers: getHeaders(),
+      body: JSON.stringify(object)
+    })
+
+    const result = await response.json()
+
+    if (response.status === 200) {
+      return {
+        success: true,
+        data: result
+      }
+    } else {
+      return {
+        success: false,
+        data: result
+      }
+    }
+
+  } catch (e) {
+    console.log(e)
+    return {
+      success: false,
+      data: ''
+    }
+  }
+}
+
+
 const ProductService = {
   getAll,
   getFilter,
   getById,
+  listofcategoriesandfeaturedproducts,
+  getProductofcategory,
   create,
   updateById,
   deleteById,
@@ -492,13 +618,18 @@ const ProductService = {
   addSizeById,
   addColorById,
   getQuantityProductById,
-  addQuantityInSizeAndColor
+  addQuantityInSizeAndColor,
+  revenuemonthly,
+  revenuemonth
 }
 
 export {
   getAll,
   getFilter,
   getById,
+  addQuantityInSizeAndColor,
+  listofcategoriesandfeaturedproducts,
+  getProductofcategory,
   create,
   updateById,
   deleteById,
@@ -509,7 +640,8 @@ export {
   addSizeById,
   addColorById,
   getQuantityProductById,
-  addQuantityInSizeAndColor
+  revenuemonthly,
+  revenuemonth
 }
 
 export default ProductService

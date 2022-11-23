@@ -106,7 +106,13 @@ function App() {
                     path={route.path}
                     element={
                       <Layout>
-                        <Page />
+                        {route.context ?
+                          <route.context>
+                            <Page />
+                          </route.context>
+                          :
+                          <Page />
+                        }
                       </Layout>
                     }
                   />
